@@ -1,5 +1,5 @@
 ---
-title: "Survival_Analysis"
+title: "Survival Analysis: Kaplan Meier estimation"
 author: "Felix Eßer"
 date: "8/26/2020"
 output:
@@ -22,7 +22,7 @@ library(tidyverse)
 ```
 
 
-## Kaplan-Meier-Estimator
+## Basic Kaplan-Meier-Estimator
 
 $$ \hat{S}(t) = \prod_{t_i \leq t}(1 - \hat{q_i}) = \prod_{t_i \leq t}\left( 1 - \frac{d_i}{n_i}\right)$$
 where $n_i$ is the number of subjects at risk at time $t_i$, and $d_i$ is the number of individuals who fail this time. 
@@ -132,4 +132,61 @@ The median follow-up time is one measure of the quality of a study. It captures 
 veteran$status_followup <- 1 - veteran$status
 rev_km <- survfit(Surv(time = time, event = status_followup) ~ 1, data = veteran)
 ```
+
+
+## Left-Truncation
+Has to be added later...
+
+
+
+## Comparison of Survival Functions
+
+Null-hypothesis: $H_0: S_1(t) = S_0(t)$. Ther alternative hypothesis can be formulated two-sided or one-sided. Sadly it is not that simple and the hypotheses have to be reformulated because survival distribution can differ in various forms (crossing, difference starts only at a specific time point and so on)
+
+Here, two possibilites are discussed to compare two (or more) survival functions. These tests belong to the G-rho family or Harrington-Fleming-tests. 
+In the following, the two treatment groups of the veteran dataset are compared in regard to their survival functions.
+
+```{r grouped km-plot}
+autoplot(survfit(Surv(time = time, event = status) ~ trt, data = veteran)) +
+  scale_fill_manual(name = "Experimental condition", labels = c("Standard", "Test Treatment"),
+                    values = c(2, 4)) + # defines colors
+  scale_color_manual(name = "Experimental condition", labels = c("Standard", "Test Treatment"),
+                     values = c(2, 4)) +
+  theme_light()
+```
+
+
+
+
+The first test is the log-rank or Mantel-Haenszel test. 
+
+```{r log-rank test}
+survdiff(Surv(time = time, event = status) ~ trt, # comparing both treatment groups
+         data = veteran,
+         rho = 0) # rho = 0 is the default value; scalar parameter
+```
+
+The log-rank test yielded a non-significant result, $\chi^2(1) = 0, p = .9$.
+
+Through the argument `rho = 1` a modified test is performed, namely the Peto & Peto modification of the Gehan-Wilcoxon test. This test place a higher weight on earlier survival differences. 
+```{r gehan-wilcoxon test}
+survdiff(Surv(time = time, event = status) ~ trt, # comparing both treatment groups
+         data = veteran,
+         rho = 01) # rho = 1 for different test; scalar parameter
+```
+
+This test produces a different result although it is still not significant, $\chi^2(1) = 0.9, p = .4$.
+
+
+### Stratified tests
+
+In the nonparametric applorach (Kaplan-Meier estimate) it is also possible to controll for a covariate. As long as the covariate is categorical with a small number of levels, regression-based approaches are not by all means necessary. The stratified log-rank test can be used instead.
+```{r stratified test}
+survdiff(Surv(time, status) ~ trt + 
+           strata(celltype),  # stratified categorical variable celltype (survival::strata())
+         data = veteran)
+```
+
+
+
 
