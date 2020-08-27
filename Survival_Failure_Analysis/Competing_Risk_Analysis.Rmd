@@ -1,0 +1,87 @@
+---
+title: "Competing Risk Analysis"
+author: "Felix Eßer"
+date: "8/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+```{r load packages}
+library(cmprsk)
+library(survminer) # to plot competing risks in ggplot
+library(tidyverse)
+```
+
+
+
+"Competing risk analysis is dedicated to the study of failure probabilities when each individual may fail due to one of several causes, called competing events."
+
+"If a patient experiences a competing event, standard survival analysis methods treat that patient as censored for the outcome of interest. Why is this a problem? Kaplan-Meier curves overestimate the incidence of the outcome over time. Cox models inflate the relative differences between groups, resulting in biased hazard ratios."
+
+ALTERNATIVES TO STANDARD METHODS:
+Alternatives to standard methods:
+* Survival curves:Cumulative Incidence Function (CIF)
+    + Non-parametric CIF
+    + Fine-Gray (1999) CIF
+    + Inverse probability weighting (IPW) corrected Kaplan-Meier
+* Options for regression models:
+    + Sub-distribution hazard ratio (SHR)
+        - Fine-Gray (1999)
+        - Klein-Andersen (2005) 
+    + Cause-specific hazard ratio (CHR)
+* Number-needed-to-treat (NNT):
+    + Gouskova et al (2014)
+
+
+### Inspect data
+```{r dataset}
+data <- read_csv("../Data/bmt.csv", col_types = cols(.default = col_double())) %>% 
+  mutate(dis = factor(dis, levels = c(0,1), labels = c("ALL", "AM")))
+
+glimpse(data)
+```
+
+"The variable `dis` indicates disease coded 0 for ALL and 1 for AML (grouping variable). `ftime` indicates follow-up time in months, that is, the length of follow-up from transplant to relapse for patients who relapsed, to death for patients dead for transplant related mortality or to the last check-up in survivors; `status` is coded as 0 for a survivor (censored), 1 for death from transplant related mortality, and 2 for relapse."
+
+
+## Non-parametric Cumulative Incidence Function
+
+```{r nonparametric CIF}
+np_cif <- with(data, cuminc(ftime = ftime, # follow-up time
+                  fstatus = status, # polytomous variable!
+                  group = dis, # estimate CIF for different groups
+                  cencode = 0)) # censoring code of fstatus variable
+np_cif
+plot(np_cif)
+```
+
+
+"First, the print out shows the results of Gray’s test 5 for equality of CIFs across groups. In our example, cumulative incidence curves for ALL and AML are not statistically different for death due to TRM (coded as 1) (P-value = .253915), but they are highly significant for relapse (coded as 2) (P-value = 0.0077785). The output reports cumulative incidence estimates, and corresponding standard errors, for each cause of failure (TRM or relapse) in each disease group (ALL or AML). A plot of estimated CIFs for each cause of failure–disease combination is also produced (see Figure below).
+
+```{r plot nonparametric CIF}
+plot(np_cif)
+```
+
+It is also possible to plot it with `ggplot` with aid of the function `ggcompetingrisks()` of the `survminer` package.
+```{r ggplot nonparametric CIF}
+ggcompetingrisks(np_cif,
+                 ggtheme = theme_minimal(),
+                 conf.int = TRUE) +
+  scale_color_manual(name = "Event", labels = c("Death", "Relapse"),
+                     values = c(2, 4)) +
+  scale_fill_manual(name = "Event", labels = c("Death", "Relapse"),
+                    values = c(2, 4)) +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+
+
+
+
+
