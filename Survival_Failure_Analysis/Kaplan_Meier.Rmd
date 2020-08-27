@@ -1,0 +1,135 @@
+---
+title: "Survival_Analysis"
+author: "Felix Eßer"
+date: "8/26/2020"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+```{r load packages, message=FALSE}
+library(ggfortify) # to plot survival curves with ggplot2
+library(survival)
+library(tidyverse)
+```
+
+
+## Kaplan-Meier-Estimator
+
+$$ \hat{S}(t) = \prod_{t_i \leq t}(1 - \hat{q_i}) = \prod_{t_i \leq t}\left( 1 - \frac{d_i}{n_i}\right)$$
+where $n_i$ is the number of subjects at risk at time $t_i$, and $d_i$ is the number of individuals who fail this time. 
+
+# Inspect data
+```{r dataset}
+data(veteran)
+str(veteran)
+```
+
+The veteran dataset contains data from a randomized trial of two treatment regimens for lung cancer. In the documentation of the veteran dataset the following information can be found:
+
+trt:	1=standard 2=test
+celltype:	1=squamous, 2=smallcell, 3=adeno, 4=large
+time:	survival time
+status:	censoring status
+karno:	Karnofsky performance score (100=good)
+diagtime:	months from diagnosis to randomisation
+age:	in years
+prior:	prior therapy 0=no, 10=yes
+
+
+At first, a survival object has to be created with the `Surv()` function. This object contains the time to event for each person with additional information of censoring (indicated with a '+'-sign.
+```{r create survival object}
+surv_obj <- with(veteran, Surv(time = time, event = status)) # create survival object
+head(surv_obj, 20)
+```
+
+The next step is to use this object inside the `survfit()` function and produce the Kaplan-Meier estimate. Printing the fitted model results in overall statistics of the model.
+```{r kaplan-meier estimate}
+km_model <- survfit(Surv(time = time, event = status) ~ 1, data = veteran)
+km_model
+```
+
+The median survival time is 80 days and the 95% confidence interval ranges from 52 to 105 days. 
+
+Using the `summary()` function, for every time point the model's data can be printed. By aid of the `times` argument, it is possible to control which time points are printed.
+
+```{r km summary}
+summary(km_model, times = c(1:10, 50*(1:5)))
+```
+
+
+
+### Different confidence intervals
+It is also possible to compute confidence intervals based on the complementary log-log transformation. This has to be explicitly specified.
+```{r log-log CI}
+km_log <- survfit(Surv(time = time, event = status) ~ 1,
+                  conf.type = "log-log",
+                  data = veteran)
+km_log
+```
+
+
+As can be seen in comparison to the output from the `km_model` object, the 95% confidence intervals are a bit different. 
+
+
+
+### Plots
+To obtain a quick and dirty plot of the model, the `R base` plotting system can be used, which can also be modified.
+```{r base r km-plot}
+plot(km_model, xlab = "Time", main = "Plot of Kaplan Meier estimate")
+```
+
+Is the aim to produce a more professional plot, the package `ggplot2` can be used. Here, there are two possibilities: First, the object `km_model` is an object of the class *survfit* which can be recognized by the function `autoplot()` of the `ggplot2` package. Therefore, executing the call `autoplot(km_model)` would result in a decent plot which can be further modified. In order that this works, the package `ggfortify` has to be loaded. Second, a plot from ggplot can be produced *by hand*. Unfortunately, it is not possible to plot the confidence interval as a stepped ribbon. 
+Next, the first procedure is demonstrated.
+
+```{r ggplot km-plot}
+km_table <- summary(km_model)$table # save median
+autoplot(km_model,
+         conf.int.alpha = 0.2, # opacity of confidence interval
+         censor.colour = "blue", # change colour of censor sign
+         censor.size = 5,
+         xlab = "Time", ylab = "Survival probability", main = "Kaplain-Meier estimate") +
+  geom_hline(yintercept = 0.5, linetype = 3) +
+  geom_segment(aes(x = km_table["median"], y = 0,
+                   xend = km_table["median"], yend = 0.5),
+               colour = "green", linetype = "dashed") +
+  geom_segment(aes(x = km_table["0.95LCL"], y = 0,
+                   xend = km_table["0.95LCL"], yend = 0.5),
+               colour = "blue", linetype = "dashed") +
+  geom_segment(aes(x = km_table["0.95UCL"], y = 0,
+                   xend = km_table["0.95UCL"], yend = 0.5),
+               colour = "blue", linetype = "dashed") +
+  labs(caption = "The green line indicates median survival time for 50% at 80 days. The blue lines represent the lower and upper 95% \nconfidence interval limits at 52 and 105 for the median, respectively.") +
+  theme(plot.caption = element_text(hjust = 0)) #+
+  #theme_light(plot.caption = element_text(hjust = 0))
+```
+
+
+### Different Estimator
+
+It is also possible to estimate the survival function by the means of a different estimator. This estimator is often called *Nelson-Altschuler* estimator or *Fleming-Harrington* estimator. 
+In `R` this estimator can be used, specifying the `type = "fh"` argument in the `survfit()` function
+
+```{r fh-estimator}
+fh_model <- survfit(Surv(time = time, event = status) ~ 1, type = "fh", data = veteran)
+summary(fh_model, times = c(1:10, 50*(1:5)))
+```
+
+
+### Median Follow-Up time
+The median follow-up time is one measure of the quality of a study. It captures how long, on average, participants have been followed. The definition of the median follow-up time is ambiguous. One approach is known as the 'reverse' Kaplan-Meier in which the Kaplan-Meier estimate is estimated using the reversed censoring indicators. This means that the event is for example not death but the absent of death. A censored case is a case with an event. Through this procedure the 'potential' median survival time can be calculated. This is only reasonable if a certain amount of people have censored values. Otherwise, the median of the time variable has to be used. 
+
+```{r reverse km}
+# here no interpretable results are obtained
+veteran$status_followup <- 1 - veteran$status
+rev_km <- survfit(Surv(time = time, event = status_followup) ~ 1, data = veteran)
+```
+
