@@ -1,0 +1,2 @@
+# This file sets the shown language of this repository to R
+*.* linguist-language=R
