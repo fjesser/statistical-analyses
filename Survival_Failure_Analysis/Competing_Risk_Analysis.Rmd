@@ -171,5 +171,65 @@ In this equation $l$ is the maximized value of the log-likelihood, $n$ is the nu
 ```
 The model's $BIC$ is equal to 558.43. This value can be used to compare it with $BIC$s from other models. The smaller the value, the better the model. 
 
+#### Model diagnostics
+Within the fitted model is also a matrix of *Schoenfeld residuals*
+```{r schoenfeld residuals}
+head(fg_model$res)
+```
+
+Plotting the j-th column of this matrix against the vector of unique failure times allows for the evaluation of the lack of fit over time in the corresponding covariate.
+```{r residual plot}
+# this is also possible with the following function
+# scatter.smooth(fg_model$uft, fg_model$res[,1])
+bind_cols(as_tibble(fg_model$res,
+                    .name_repair = ~str_c("sch_res_", names(fg_model$coef))),
+          as_tibble(fg_model$uftime,
+                    .name_repair = ~c("unique_failure_time"))) %>% 
+  pivot_longer(cols = starts_with("sch_res"),
+               names_to = "Covariate",
+               names_transform = list(Covariate =~ str_extract(.x, "(?<=sch_res_)\\w+$")),
+               values_to = "sch_res") %>% 
+  ggplot(aes(unique_failure_time, sch_res)) +
+  geom_point() + 
+  geom_smooth(formula = y ~ x, method = "loess") +
+  facet_wrap(~ Covariate, nrow = 2, ncol = 2,
+             scales = "free_y")
+  
+
+```
+
+
+"If the proportional hazard subdistribution assumption holds the residuals should have locally a constant mean across time. To check this, we added a scatterplot smoother to each plot. The resulting patterns show some evidence of a non-constant local average?
+
+Another assumption is that the subdistribution for an event of interest at a given covaraite value is a constant shift on the complementary log-log scale from a baseline subdistribution function. "This can be generalized by including interactions of one or more covariates with functions of time to allow the magnitude of the shift to change with follow-up time."
+
+... more work needs to be done
+
+
+
+### Model based estimaton of the CIF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
