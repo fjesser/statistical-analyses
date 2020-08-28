@@ -1,0 +1,32 @@
+---
+title: "Cox Proportional Hazards Model"
+author: "Felix Eßer"
+date: "8/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction 
+
+```{r load packages}
+library(survival)
+library(tidyverse)
+```
+
+### Inspect data
+```{r dataset}
+data(veteran)
+str(veteran)
+```
+
+The Cox Proportional Hazards Model enables users to model event rates as a log-linear function of predictors/covariates. The model produces regression coefficients of each covariate.
+
+```{r cox model}
+cox_model <- coxph(Surv(time = time, event = status) ~ trt + celltype + age,
+                   data = veteran)
+cox_model
+```
+
