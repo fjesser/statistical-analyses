@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Introduction
 
 ```{r load packages}
+library(aod) # to perform wald test for overall p-value for polytomous categorical covariate
 library(cmprsk)
 library(survminer) # to plot competing risks in ggplot
 library(tidyverse)
@@ -23,20 +24,28 @@ library(tidyverse)
 
 "If a patient experiences a competing event, standard survival analysis methods treat that patient as censored for the outcome of interest. Why is this a problem? Kaplan-Meier curves overestimate the incidence of the outcome over time. Cox models inflate the relative differences between groups, resulting in biased hazard ratios."
 
-ALTERNATIVES TO STANDARD METHODS:
 Alternatives to standard methods:
 * Survival curves:Cumulative Incidence Function (CIF)
     + Non-parametric CIF
     + Fine-Gray (1999) CIF
     + Inverse probability weighting (IPW) corrected Kaplan-Meier
 * Options for regression models:
+    + Cause-specific hazard ratio (CHR)
     + Sub-distribution hazard ratio (SHR)
         - Fine-Gray (1999)
         - Klein-Andersen (2005) 
-    + Cause-specific hazard ratio (CHR)
 * Number-needed-to-treat (NNT):
     + Gouskova et al (2014)
 
+""Recommendations for analyzing competing risk survival data
+* Cumulative incidence functions (CIFs) should be used to estimate the incidence of each of the different types of competing risks. Do not use the Kaplan-Meier estimate of the survival function for this purpose.
+* Researchers need to decide whether the research objective is on addressing etiologic questions or on estimating incidence or predicting prognosis.
+* Use the Fine-Gray subdistribution hazard model when the focus is on estimating incidence or predicting prognosis in the presence of competing risks.
+* Use the cause-specific hazard model when the focus is on addressing etiologic questions.
+* In some settings, both types of regression models should be estimated for each of the competing risks to permit a full understanding of the effect of covariates on the incidence and the rate of occurrence of each outcome""
+
+
+## Non-parametric Cumulative Incidence Function
 
 ### Inspect data
 ```{r dataset}
@@ -49,15 +58,13 @@ glimpse(data)
 "The variable `dis` indicates disease coded 0 for ALL and 1 for AML (grouping variable). `ftime` indicates follow-up time in months, that is, the length of follow-up from transplant to relapse for patients who relapsed, to death for patients dead for transplant related mortality or to the last check-up in survivors; `status` is coded as 0 for a survivor (censored), 1 for death from transplant related mortality, and 2 for relapse."
 
 
-## Non-parametric Cumulative Incidence Function
-
+### Model
 ```{r nonparametric CIF}
 np_cif <- with(data, cuminc(ftime = ftime, # follow-up time
                   fstatus = status, # polytomous variable!
                   group = dis, # estimate CIF for different groups
                   cencode = 0)) # censoring code of fstatus variable
 np_cif
-plot(np_cif)
 ```
 
 
@@ -81,7 +88,88 @@ ggcompetingrisks(np_cif,
 
 
 
+## Regression-Based Approaches 
+As mentioned in the Introduction, there are two regression based approaches to analyze competing risk data. The first is the classical cox proportional hazard regression model for the calculation of cause-specific hazard ratio. This analysis is performed if etiological questions are in focus. 
+The second approach is the Fine-Gray model for the calculation of sub-distributed hazard ratios. This analysis is performed if incidence or prognosis is in focus in presence of competing risks. 
 
+"When do Cox regression and the Fine-Gray model differ?
+* If competing event is frequent
+* If competing event occurs early
+* Effect of censoring proportion ...
+* Effect of event time correlation .."
+
+### Inspect data
+```{r regression data}
+data(Melanoma, package = "MASS") 
+melanoma <- Melanoma %>% 
+  as_tibble() %>% 
+  # create polytomuous categorical variable
+  mutate(thickness_cat = cut(thickness, breaks = c(-Inf, quantile(thickness, c(0.33, 0.66))[[1]],
+                                                   quantile(thickness, c(0.33, 0.66))[[2]], +Inf),
+                             labels = c("minimum", "medium", "maximum")))
+glimpse(melanoma)
+```
+
+time: survival time in days, possibly censored.
+status: 1 died from melanoma, 2 alive, 3 dead from other causes.
+sex: 1 = male, 0 = female.
+age: age in years.
+year: of operation.
+thickness: tumour thickness in mm.
+ulcer: 1 = presence, 0 = absence.
+
+### Cox proportional hazard model
+The Cox proportinal hazard model is depicted in more detail in the file `Cox_Regression.Rmd` in the same folder. This model is estimated with the `coxph()` function of the `survival` package.
+
+```{r cox regression}
+
+```
+
+
+### Fine-Gray model
+"Fine and Gray proposed a model for the subdistribution hazard of the CIF. The subdistribution hazard is a key concept in this approach, and it is defined as the hazard of failing from a given cause in the presence of competing events, given that a subject has survived or has already failed due to different causes.
+
+The Fine-Gray model can be performed with the function `crr()` of the `cmprsk` package. This function requires that the set of covariates is specified as a matrix. In addition, the censoring code (`cencode`, default is 0) and the failure type of interest should be specified (`failcode`, default is 1). 
+
+For polytomous covariates indicator variables have to be created. The `crr()` function is not able to deal with polytomous covariates.
+```{r creation indicator variables}
+melanoma <- melanoma %>% 
+  mutate(med_thick = if_else(thickness_cat == "medium", 1, 0),
+         max_thick = if_else(thickness_cat == "maximum", 1, 0))
+```
+
+
+
+```{r fine-gray model}
+fg_model <- crr(ftime = melanoma$time,
+                fstatus = melanoma$status,
+                cov1 = melanoma[, c("sex", "age", "med_thick", "max_thick")],
+                cencode = 2, # alive
+                failcode = 1) # died from melanoma
+                
+summary(fg_model)
+```
+
+"The first part of the output shows for each term in the design matrix the estimated coefficient $\hat{\beta}_j$, the relative risk $exp(\hat{\beta}_j)$, the standard error, the z-value and the corresponding $p$-value for assessing significance." In this example the covariates sex and age are not significant. In contrast, the indicator variables coding the thickness of the melanom are significant. However, to obtain an overall $p$-value for the polytomous categorical covariate thickness, the function `wald.test()` from the `aod` package is needed.
+```{r wald-test}
+wald.test(fg_model$var, fg_model$coef, Terms = 3:4)
+```
+
+The wald-test indicates a significant result for the influence of the factor thickness on the probability of survival, $\chi^2(2) = 19.0, p < .001$.
+
+Back to the summary output from the Fine-Gray model: 
+"The second part of the output for competing risks regression shows the relative risk for each term, $exp(\hat{\beta}_j)$, and a 95% confidence interval."
+
+"The relative risk or subdistribution hazard ratio for a categorical covariate is the ratio of subdistribution hazards for the actual group with respect to the baseline, with all other covariates being equal. If the covariate is continuous then the relative risk refers to the effect of a one unit increase in the covariate, with all other covariates being equal."
+In the example the comparision between minimum and medium thickness is significant with a $\hat{\beta} = 1.469, p = .002$. The relative risk is $exp(\hat{\beta}) = exp(1.469) = 4.34$ of a medium thick melanom in comparision to a minmum thick melanom. 
+
+The last part of the output shows the pseudo log-likelihood at maximum and the pseudo likelihood ratio test, that is, the difference in the objective function at the global null and at the final estimates. As this objective function is not a true likelihood, this test statistic is not asymptotically distributed as a $\chi^2$. As a consequence, model comparison based on likelihood ratio approach cannot be performed directly, but significance must be evaluated through simulations. Another approach and criterion for model selection is to use information criteria which can be calculated by hand. The popular Bayesian information crteria ($BIC$) is calculated as follows:
+$$BIC = -2l + log(n)d$$.
+In this equation $l$ is the maximized value of the log-likelihood, $n$ is the number of observations and $d$ is the number of free parameters to be estimated. These information can be extraced from the fitted model.
+```{r calculate BIC}
+-2 * fg_model$loglik + log(fg_model$n)*length(fg_model$coef)
+```
+The model's $BIC$ is equal to 558.43. This value can be used to compare it with $BIC$s from other models. The smaller the value, the better the model. 
 
 
 
