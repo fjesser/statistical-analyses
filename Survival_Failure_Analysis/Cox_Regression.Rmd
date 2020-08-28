@@ -27,6 +27,5 @@ The Cox Proportional Hazards Model enables users to model event rates as a log-l
 ```{r cox model}
 cox_model <- coxph(Surv(time = time, event = status) ~ trt + celltype + age,
                    data = veteran)
-cox_model
 ```
 
