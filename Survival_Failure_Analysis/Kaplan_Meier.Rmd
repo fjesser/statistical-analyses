@@ -18,6 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r load packages, message=FALSE}
 library(ggfortify) # to plot survival curves with ggplot2
 library(survival)
+library(survminer) # different package to plot survival curves with ggplot
 library(tidyverse)
 ```
 
@@ -111,6 +112,28 @@ autoplot(km_model,
   theme(plot.caption = element_text(hjust = 0)) #+
   #theme_light(plot.caption = element_text(hjust = 0))
 ```
+
+
+With the package `survminer`it is possible to plot different kinds of survival curves with the `ggplot` plotting system.
+```{r ggplot survminer probability}
+ggsurvplot(km_model)
+```
+
+
+
+
+Using the argument `fun` it is possible to plot the survival probability in percentage (`"fun = "pct"`), cumulative events (`"fun = "event"`) or the cumulative hazard function (`fun = "cumhaz"`).
+
+```{r ggplot survminer}
+standard_plot <- ggsurvplot(km_model)
+pct_plot <- ggsurvplot(km_model, fun = "pct")
+event_plot <- ggsurvplot(km_model, fun = "event")
+cumhaz_plot <- ggsurvplot(km_model, fun = "cumhaz")
+arrange_ggsurvplots(list(standard_plot, pct_plot, event_plot, cumhaz_plot),
+                    nrow = 2, ncol = 2,
+                    title = "Different survival curves produces with survminer")
+```
+
 
 
 ### Different Estimator
