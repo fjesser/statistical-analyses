@@ -11,24 +11,91 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Exploratory Data Analysis and Data Screening
 
-In advance to statistical (inferential) analyses, it is important to conduct exploratory data analysis (EDA) or data screening. Through EDA it is possible to get a *feeling* for the data, detect outliers, assess assumptions, etc. Additionally, analyses are performed in the `base R` framework and the `tidyverse` framework. Of course there are several packages to conduct these kind of analyses. In the following, the packages `skimr` and `psych` are used. The package `skimr` can be used in conjuction with the `tidyverse` framework. There are a bunch of packages which can be used to conduct basic descriptive statistics like `pastecs`, `Hmisc`, `summarytools`, and surely others. 
+In advance to statistical (inferential) analyses, it is important to conduct exploratory data analysis (EDA) or data screening. Through EDA it is possible to get a *feeling* for the data, detect outliers, assess assumptions, etc. Additionally, analyses are performed in the `base R` framework and the `tidyverse` framework. Of course there are several packages to conduct these kind of analyses. In the following, the packages `skimr` and `psych` are used. The package `skimr` can be used in conjuction with the `tidyverse` framework and is kableable. In contrast, the package `psych` provides additional statistics. There are a bunch of packages which can be used to conduct basic descriptive statistics like `pastecs`, `Hmisc`, `summarytools`, and surely others. 
+
+### Packages and datasets
 
 ```{r load packages}
 library(tidyverse) # data manipulation and plots
 library(skimr)
 ```
 
+Throughout the dataset `mtcars` is used to demonstrate the proposed concepts. 
+
+```{r data}
+data("mtcars") # from tidyverse package
+mtcars <- mtcars %>% as_tibble() %>% 
+  # manipulate tibble to obtain different classes of columns
+  mutate(vs = factor(vs, labels = c("v-shaped", "straight")),
+         character = rep(c("A", "B"), length.out = nrow(mtcars)))
+```
+
+
 
 ## Univariate Exploratory Data Analysis
-
 This is used to check the accuracy of the input. 
 
+## Quick Exploratory Data Analysis on the whole dataset
+
+### `Base R` approach
+In `base R` the `summary()` function can be used:
+```{r base R}
+summary(mtcars)
+```
+
+### `skimR` approach
+
+The function `skim` can be used in pipes and can itself be the input of a pipe in which case the summary data can be further manipulated.
+
+```{r skim}
+mtcars %>% 
+  group_by(am) %>% # skim recognises grouped tibbles
+  skim()
+```
+
+With the function `skim_tee()` it is possible to obtain an output from a pipe but use the data in a further pipeline. 
+Using the function `skim_with()` additional/other statistics can be calculated. However, this procedure is a bit unconvenient as `skim_with()` is a closure and returns therefore a function which has to be assigned.
+```{r skim_with}
+skim_median <- skim_with(numeric = sfl(median), # sfl = skimmer_function_list
+                         append = FALSE) # no default statistics
+skim_median(mtcars)
+```
+
+### `psych` approach
+
+Using the function `describe` from the package `psych` results more easily in additional statistics.
+```{r describe}
+mtcars %>% 
+  select(mpg, vs, character) %>% 
+  describe() 
+```
+
+The output of the `describe()` function can be used in further pipes. The advantage is that statistics regarding the distribution are given (skew and kurtosis).
+To obtain descriptive statistics by group, the function `describeBy()` can be used. As can be seen, the output of the `describeBy` function is not well knitable.
+```{r describeBy}
+mtcars %>% 
+  select(mpg, vs, am) %>% 
+  describeBy(group = .$am) # short: describeBy(mtcars ~ am)
+```
+
+
+
+## Measures of Central Tendency
+Measures of central tendency are the mode, median and mean. In addition, the weighted mean, the geometric mean and the harmonic mean are 
+
+## Measures of dispersion
 
 
 ## Assumption of normality
 
 
 ## Bi- and Multivariate Exploratory Data Analysis
+
+```{r marida}
+marida()
+```
+
+
 
 ## Missing data
 
