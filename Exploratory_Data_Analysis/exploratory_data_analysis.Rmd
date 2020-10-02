@@ -15,13 +15,13 @@ In advance to statistical (inferential) analyses, it is important to conduct exp
 
 ### Packages and datasets
 
-```{r load packages}
+```{r load packages, message=FALSE}
 library(tidyverse) # data manipulation and plots
+library(psych)
 library(skimr)
 ```
 
 Throughout the dataset `mtcars` is used to demonstrate the proposed concepts. 
-
 ```{r data}
 data("mtcars") # from tidyverse package
 mtcars <- mtcars %>% as_tibble() %>% 
@@ -30,7 +30,21 @@ mtcars <- mtcars %>% as_tibble() %>%
          character = rep(c("A", "B"), length.out = nrow(mtcars)))
 ```
 
+The variables mean the following:
 
+| Variable Name | Meaning |
+|---------------|---------|
+| mpg	 | Miles/(US) gallon |
+| cyl	 | Number of cylinders |
+| disp |	Displacement (cu.in.) |
+| hp	 | Gross horsepower |
+| drat |	Rear axle ratio |
+| wt	 | Weight (1000 lbs) |
+| qsec |	1/4 mile time |
+| vs   | Engine (0 = V-shaped, 1 = straight) |
+| am   | Transmission (0 = automatic, 1 = manual) |
+| gear |	Number of forward gears |
+| carb |	Number of carburetors |
 
 ## Univariate Exploratory Data Analysis
 This is used to check the accuracy of the input. 
