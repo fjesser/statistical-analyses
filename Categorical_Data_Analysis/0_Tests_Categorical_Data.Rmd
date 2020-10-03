@@ -1,0 +1,60 @@
+---
+title: "Tests for Categorical Data Analysis"
+author: "Felix Eßer"
+date: "10/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+```{r load packages, message=FALSE}
+library(rstatix)
+library(tidyverse)
+library(vcdExtra)
+```
+
+
+## Comparing an observed frequency distribution with an exepected frequency distribution
+
+### dichotomous data
+binomial test, chi-square test
+### polytomous data
+multinomial test, chi-square test
+
+## Comparing independent groups regarding frequencies
+
+### Comparing two independent groups regarding frequencies
+#### dichotomous data
+fisher-yates-test, chi-square test
+#### polytomous data
+freeman-halton-test, chi-square-test
+
+### Comparing several independent groups regarding frequencies
+chi-square-test, fuchs-kennet-outliertest
+
+## Comparing dependent groups regarding frequencies
+### Comparing two dependent groups regarding frequencies
+#### dichotomous data
+McNemar-test, 
+#### polytomous data
+Marginalhomogenitätstest nach Lehmacher, Bowker-symmetry-test
+
+### Comparing several dependent groups regarding frequencies
+#### dichotomous data
+Cochran's Q test
+#### polytomous data
+
+
+
+
+
+
+
+
+
+
+
