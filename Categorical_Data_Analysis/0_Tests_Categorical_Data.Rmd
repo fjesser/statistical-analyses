@@ -6,16 +6,31 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, paged.print = FALSE)
 ```
 
 ## Introduction
 
 ```{r load packages, message=FALSE}
+library(magittr)
 library(rstatix)
 library(tidyverse)
 library(vcdExtra)
 ```
+
+```{r load and generate data}
+# data for one-sample analyses
+
+# data for independent samples analyses
+
+# data for dependent samples analyses
+dep_data <- tibble(
+  outcome = c(0,1,1,0,0,1,0,1,1,1,1,1,0,0,1,1,0,1,0,1,1,0,0,1,0,1,1,0,0,1),
+  treatment = gl(3, 1, 30,labels = LETTERS[1:3]),
+  participant = gl(10, 3, labels = letters[1:10])
+  )
+```
+
 
 
 ## Comparing an observed frequency distribution with an exepected frequency distribution
