@@ -16,6 +16,7 @@ In advance to statistical (inferential) analyses, it is important to conduct exp
 ### Packages and datasets
 
 ```{r load packages, message=FALSE}
+library(magrittr) # for %$% and %T>% pipe
 library(tidyverse) # data manipulation and plots
 library(psych)
 library(skimr)
@@ -93,9 +94,46 @@ mtcars %>%
 ```
 
 
-
 ## Measures of Central Tendency
-Measures of central tendency are the mode, median and mean. In addition, the weighted mean, the geometric mean and the harmonic mean are 
+Measures of central tendency are the mode, median and mean. In addition, the weighted mean, the geometric mean and the harmonic mean are explained. 
+
+There is no `base R` function for the **mode** (most frequent manifestation of a variable). Therefore the `table()` function is used to obtain the frequencies.
+```{r mode alternative}
+table(mtcars$vs)
+```
+**Median** and **mean** are calculated via the respective functions.
+```{r median and mean}
+mtcars %>% 
+  summarise(Median_mpg = median(mtcars$mpg),
+            Mean_mpg = mean(mtcars$mpg))
+```
+
+In case the goal is to average values from different groups with a differing number of observations, the **weighted mean** is the appropriate measure. Therefore the 
+```{r weighted mean}
+mtcars %$% # the %$% pipe explodes the dataframe-name like the with() function
+  weighted.mean(x = mpg, w = gear)
+```
+
+The calculation of the **geometric mean** requires at least ratio scale (has an absolute zero point and no numbers exist below zero). The geometric mean is the $n$-th root of the product of all values from all cases $m$:
+$$ \overline{x}_{geom} = \sqrt[n]{\prod_{m = 1}^{n} x_m} $$
+
+In `R` is no built-in function, but the package `psych` offers the function `geometric.mean()`:
+```{r geometric mean}
+geometric.mean(mtcars$mpg)
+```
+
+The geometric mean is useful for describing non-normal distributions and suits as a measure of central tendency if the difference between values is better described through their ratio rather than their difference. For example, this is the case for growth rates. The average of growth rates is calculated with the geometric mean. 
+An geometric explanation: Imagine a rectangle with the dimensions $9m*4m = 36m^2$. The geometric mean describes the side length of a square posessing the same area. 
+
+
+The **harmonic mean** is the reciprocal of the arithmetic mean of the reciprocals:
+$$ \overline{x}_{harm} = \frac{n}{\Sigma_{m = 1}^{n} \frac{1}{x_m}} $$
+Likewise to the geometric mean, there is no built-in function for the **harmonic mean** but the `psych` package offers the function `harmonic.mean()`:
+```{r harmonic mean}
+harmonic.mean(mtcars$qsec)
+```
+The harmonic mean is used in case of rates, like speed over fixed distances instead of times. In the latter case the arithmetic mean can be used. 
+
 
 ## Measures of dispersion
 
