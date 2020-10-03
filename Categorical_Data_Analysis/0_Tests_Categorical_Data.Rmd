@@ -52,6 +52,15 @@ freeman-halton-test, chi-square-test
 chi-square-test, fuchs-kennet-outliertest
 
 ## Comparing dependent groups regarding frequencies
+For this section the data `dep_data` is used:
+```{r dep_data}
+dep_data
+```
+
+```{r}
+xtabs(~ outcome + treatment, dep_data)
+```
+
 ### Comparing two dependent groups regarding frequencies
 #### dichotomous data
 McNemar-test, 
@@ -59,8 +68,29 @@ McNemar-test,
 Marginalhomogenitätstest nach Lehmacher, Bowker-symmetry-test
 
 ### Comparing several dependent groups regarding frequencies
+
+
 #### dichotomous data
-Cochran's Q test
+Cochran's Q test can be used to compare several dependent dichotomous measurements. The package `rstatix` provides the function `cochran_qtest()`.
+
+Assumptions of the Cochran's Q test:
+1. Independent observations
+2. The asymptotic test (used in the following) should be used in case of $N \times m \geq 24$. Otherwise, the exact Q-Test must be used
+
+```{r cochran's q}
+cochran_qtest(dep_data, outcome ~ treatment | participant )
+```
+
+Cochran's Q-test is significant and at least two treatmens differ, $Q(2) = 10.9, p = .004$.
+To split up the significant effect pairwise McNemar tests from the package `rstatix` can be computed. In this case the p-value has to be adjusted for multiple testing (e.g., bonferroni correction).
+```{r pairwise mcnemar}
+pairwise_mcnemar_test(data = dep_data, formula = outcome ~ treatment | participant, 
+                      type = "mcnemar", # use type="exact" if n <= 20 
+                      p.adjust.method = "bonferroni")
+```
+The pairwise comparision showed that only treatment A and C differ significantly from each other, $p = .040$.
+
+
 #### polytomous data
 
 
