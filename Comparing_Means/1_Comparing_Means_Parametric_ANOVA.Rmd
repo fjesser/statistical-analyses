@@ -1,0 +1,33 @@
+---
+title: "Comparing Means - ANOVA"
+author: "Felix Eßer"
+date: "10/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+## Comparing several independent groups
+
+### One-Way ANOVA
+
+
+#### Further Analyses
+F-Test is omnibus test
+
+Pairwise comparision:
+post-hoc tests
+
+
+### Two-Way ANOVA
+
+
+## Comparing several dependent groups
+
+## Comparing independent and dependent groups
+
+

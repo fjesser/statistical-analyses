@@ -1,5 +1,5 @@
 ---
-title: "Comparing Means"
+title: "Comparing Means - t-Test"
 author: "Felix Eßer"
 date: "10/4/2020"
 output: html_document
@@ -11,14 +11,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-## Comparing a observed mean to an expected mean
+## Comparing an observed mean to an expected mean
 
 ## Comparing two groups - t-Tests
 
 ### Comparing two independent groups
 
 ### Comparing two dependent groups
-
-
-
-## Comparing severals groups - ANOVA
