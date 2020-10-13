@@ -1,0 +1,32 @@
+---
+title: "Linear Regression"
+author: "Felix Eßer"
+date: "10/13/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+```{r load packages, message=FALSE}
+#library(car) 
+library(tidyverse)
+library(QuantPsyc) # for standardized coefficients
+```
+
+## Bivariate Linear Regression
+
+### standardized coefficients
+Standardized coefficients enable to compare the effects of predictors on criterions. The unstandardized coefficients 
+
+
+## Multiple Linear Regression
+
+### Moderation
+
+### Mediation
+
+### Categorical Predictors
