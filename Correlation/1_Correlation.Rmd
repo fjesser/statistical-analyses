@@ -1,0 +1,21 @@
+---
+title: "Correlation"
+author: "Felix Eßer"
+date: "10/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Introduction and Overview
+
+# Two Nominal Variables
+
+## Two Dichotomous Variables
+
+## Two Ordinal Variables
+
+
