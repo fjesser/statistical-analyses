@@ -1,0 +1,42 @@
+---
+title: "Ordinal Analyses"
+author: "Felix Eßer"
+date: "11/6/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+# One Factorial Designs Comparing the Median
+
+## Comparing Independent Groups Regarding the Median
+
+### Comparing Two Independent Groups 
+
+### Comparing Several Independent Groups
+
+Kurskal-Wallis Test
+```{r kurskal-wallis}
+kruskal.test()
+pairwise.wilcox.test()
+```
+
+
+## Comparing Dependent Groups Regarding the Median
+
+### Comparing Two Dependent Groups
+
+### Comparing Several Dependent Groups
+Friedman's rank ANOVA
+
+# More Factorial Designs Comparing the Median
+
+See: Verteilungsfreie Methoden der Biostatistik
+
+
+
+
