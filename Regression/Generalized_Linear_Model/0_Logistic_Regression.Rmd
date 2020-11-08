@@ -1,0 +1,21 @@
+---
+title: "Logistic Regression"
+author: "Felix Eßer"
+date: "11/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+discrete dependent variables 
+
+
+# Logistic Regression 
+binary/dichotomous dependent variable 
+
+
+# Multinomial Logistic Regression
+multinomial dependent variable
