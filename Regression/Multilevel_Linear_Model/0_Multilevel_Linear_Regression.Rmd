@@ -1,0 +1,26 @@
+---
+title: "Multilevel Linear Modeling"
+author: "Felix Eßer"
+date: "11/9/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+Also known as hierarchical linear models, linear-mixed-effect model, mixed models, nested data models, random coefficient, random effects models.
+
+# Empty Model (Intercept-Only Model)
+
+# Random-Intercept Model
+
+# Random-Coefficients Model
+
+# Intercepts-As-Outcome Model
+
+# Intercepts-And-Slopes-As-Outcome Model
+
+## Cross Level Interaction
