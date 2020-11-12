@@ -1,4 +1,11 @@
+# Don't track R files
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+
+# Don't track introductory files
+*/0_Introduction.Rmd
+
+# Don't track backup .bib-files
+bibliography.bib.sav
