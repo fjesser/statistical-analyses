@@ -1,0 +1,38 @@
+---
+title: "Introduction to GAMLSS"
+author: "Felix Eßer"
+date: "11/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Generalized Additive Models for Location, Scale and Shape (GAMLSS)
+
+Generalized additive Models for location, scale and shape are a way to overcome limitations of generalized linear models (GLM) and the generalized additive models (GAM). GAMLSS are **semi-parametric regression** type models. The word semi-parametric stems from the fact that an assumption of an parametric distribution is made for the response variable and that parameters of the distribution (location, scale, shape) are modeled as functions of explanatory variables through non-parametric smoothing functions.
+
+Difference introduced by GAMLSS:
+
+* The exponential family distribution assumption for the response variable is relaxed and replaced by a general distribution family
+  + skewed, kurtotic or discrete distributions
+* In the systematic part, not only the mean (location) is modeled but also other parameters of the distribution of $y$, the scale and shape
+  + this modeling can take several functional forms: 
+      + linear and/or non-linear
+      + parametric and/or non-parametric
+      + random effects
+      
+      
+# The GAMLSS Model
+
+four distributional parameters can be a function of the explanatory variables:
+| Parameter     | Meaning                         |
+|---------------|---------------------------------|
+| $\mu_i$       | location parameter (mean)       |
+| $\sigma_i$    | scale parameter                 |
+| $\upsilon_i$  | shape parameter (often skewness)|
+| $\tau_i$      | shape parameter (often kurtosis)|
+
+
+
