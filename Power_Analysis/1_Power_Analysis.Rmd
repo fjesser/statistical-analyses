@@ -1,0 +1,73 @@
+---
+title: "Power Analysis"
+author: "Felix Eßer"
+date: "11/19/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+Disclaimer: All informations are extracted from the vignette of the `pwr` package. 
+
+Four quantities are interrelated:
+1. sample size $n$
+2. effect size $\delta$
+3. significance level $\alpha$
+4. power $1-\beta$
+
+
+Different types of power analysis:
+
+* A priori power analysis
+    + determine required sample size $n$
+    + determine $1-\beta$ (sometimes referred to as post-hoc power analysis)
+* Post-hoc power analysis
+    + effect size is given from empirical data of own study ($\hat{\delta}$; post-hoc or a posteriori)
+    + assess probability of revealing given effect size on the assumption it really exists
+
+
+## Effect Sizes
+Different effect sizes exist and the correct effect size has to be used to obtain correct results. 
+
+
+The following table has to be adjusted: 
+| Test                      | small | medium | large |
+|---------------------------|-------|--------|-------|
+| tests for proportions (p) |   0.2 |    0.5 |   0.8 |
+| tests for means (t)       |   0.2 |    0.5 |   0.8 |
+| chi-square tests (chisq)  |   0.1 |    0.3 |   0.5 |
+| correlation test (r)      |   0.1 |    0.3 |   0.5 |
+| anova (anov)              |   0.1 |   0.25 |   0.4 |
+| general linear model (f2) |  0.02 |   0.15 |  0.35 |
+
+
+# The `pwr` package
+    
+```{r packages}
+library(pwr)
+```
+ 
+    
+The package `pwr` contains different functions 
+
+| `R` Function     | Power Analysis for Statistical Test                |
+|------------------|----------------------------------------------------|
+| `pwr.p.test`     | one-sample proportion test                         |
+| `pwr.2p.test`    | two-sample proportion test                         |
+| `pwr.2p2n.test`  | two-sample proportion test (unequal sample sizes)  |
+| `pwr.t.test`     | two-sample, one-sample and paired t-tests          |
+| `pwr.t2n.test`   | two-sample t-tests (unequal sample sizes)          |
+| `pwr.anova.test` | one-way balanced ANOVA                             |
+| `pwr.r.test`     | correlation test                                   |
+| `pwr.chisq.test` | chi-squared test (goodness of fit and association) |
+| `pwr.f2.test`    | test for the general linear model                  |
+
+
+The functional idea for the functions of the `pwr` package is to leave out the argument (of the four interrelated quantities) one wants to calculate.
+
+
+
+
