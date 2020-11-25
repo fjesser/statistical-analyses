@@ -70,4 +70,38 @@ The functional idea for the functions of the `pwr` package is to leave out the a
 
 
 
+# Using the `pwr` package
+
+## Power Analysis for the general linear model
+
+The power analysis for the general linear model refers to the overall $F$-test, testing the null hypothesis $H_0: R^2 = 0$. Therefore, besides the standard quantities, the following quantities have to be used in the power analysis:
+* $df_{numerator}$ of the F-test
+    + equals the number of coefficients minus the intercept
+* effect size $f^2$ 
+
+For the analysis the caluclation of the $df_{denominator}$ is crucial: 
+
+$df_{denominator} = N - df_{numerator} - 1$.
+
+Therefore, the equation can be solved to $N$, which is: 
+
+$N = df_{numerator} + df_{denominator} + 1$.
+
+```{r glm}
+power_glm <- pwr.f2.test(u = 2, # df numerator (here 3 predictors with intercept)
+                         f2 = 0.3/(1 - 0.3), # R^2 = 0.3
+                         sig.level = 0.05, # alpha = 0.05
+                         power = 0.8)
+power_glm
+```
+Using the function to calculate $N$, $N$ equals $2 + 23 + 1 = 26$.
+
+
+
+# Report
+
+Example report from "Statistical Methods for Psychology" (Howell)
+
+"Based on the work of Jones and others (list references) we estimated that our mean difference would be approximately 8 points, with a standard deviation within each of the groups of approximately 5. This would give us an estimated effect size (d) of 8/11 5 .73. We were aiming for a power estimate of .80, and to reach that level of power with our estimated effect size, we used 30 participants in each of the two groups."
+
 
