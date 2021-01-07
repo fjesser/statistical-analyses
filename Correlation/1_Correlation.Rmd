@@ -16,6 +16,56 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Two Dichotomous Variables
 
-## Two Ordinal Variables
+### The $\varphi$ coefficient - Product-Moment-Correlation of dichotomous variables
+
+value range: [-1, +1]
+boundary value can only be obtained if relationship is perfect **and** both variables have the same distribution.
+
+The more both distributions differ, the smaller the possible absolute value of $\varphi$.
+
+There are corrections but it is easier to use other correlation measures for dichotomous variables.
+
+### Yules Q
+
+### Odds-Ratio
+
+### Tetrachoric Correlation
+
+Application of the polychoric correlation on dichotomous variables.
+
+
+## Two Polytomous Variables
+
+### Contingency Coefficient
+
+Based on $\chi^2$ value. 
+inferior to Cramer's $V$ becauseit can never reach it's upper boundary!
+
+### Cramer's $V$
+
+Based on the $\chi^2$ value
+is identical to $\varphi$ in the case of dichotomous variables. 
+value range: [0, 1]
+
+
+
+## A Dichotomous and a Polytomous Variable
+
+### Cramer's $V$
+
+
+# Two Ordinal Variables
+
+
+# Two Metric Variables
+
+
+
+
+# A Nominal and a Ordinal Variable
+
+# A Nominal and a Metric Variable
+
+# A Ordinal and a Metric Variable
 
 
