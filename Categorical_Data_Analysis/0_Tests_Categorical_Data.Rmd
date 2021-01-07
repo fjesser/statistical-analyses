@@ -81,6 +81,11 @@ The $\chi^2$-test resulted in a non-significant result, $\chi^2$ (`r chi_2_k$par
 **Post hoc tests with standardized residuals**
 
 There are standardized residuals ($z$-scores) and adjusted standardized residuals. The adjusted standardized residuals stem from the fact that under the H0 the standardized residuals have a mean of 0 but their asymptotic variance is less than 1.0 (Agresti, 2012). 
+The (adjusted) standardized residual can be interpreted as z-scores. Therefore (all two sided):
+
+- $\left| z \right| > 1.96 \implies$ significant at $p < .05$
+- $\left| z \right| > 2.58 \implies$ significant at $p < .01$ 
+- $\left| z \right| > 3.29 \implies$ significant at $p < .001$
 
 To break down a significant $\chi^2$-test, the function `chisq.posthoc.test()` of the likewise called package can be used. This function only takes a contingency matrix as input. 
 
