@@ -9,10 +9,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, paged.print = FALSE)
 ```
 
-## Introduction
+# Introduction
 
 ```{r load packages, message=FALSE}
-library(magittr)
+library(chisq.posthoc.test) # breakdown a sig. chisq
+library(magrittr)
 library(rstatix)
 library(tidyverse)
 library(vcdExtra)
@@ -22,6 +23,14 @@ library(vcdExtra)
 # data for one-sample analyses
 
 # data for independent samples analyses
+data(Toxaemia)  
+# toxaemia = abnormal condition during pregnancy characterized by hypertension
+# and high levels of protein in the urine
+  # class: Social class of mother, a factor with levels 1 2 3 4 5
+  # smoke: Cigarettes smoked per day during pregnancy, a factor with levels 0 1-19 20+
+  # hyper: Hypertension level, a factor with levels Low High
+  # urea: Protein urea level, a factor with levels Low High
+  # Freq: frequency in each cell, a numeric vector
 
 # data for dependent samples analyses
 dep_data <- tibble(
@@ -33,25 +42,75 @@ dep_data <- tibble(
 
 
 
-## Comparing an observed frequency distribution with an exepected frequency distribution
+# Comparing an observed frequency distribution with an exepected frequency distribution
 
-### dichotomous data
+## dichotomous data
 binomial test, chi-square test
-### polytomous data
+## polytomous data
 multinomial test, chi-square test
 
-## Comparing independent groups regarding frequencies
+# Comparing independent groups regarding frequencies
 
-### Comparing two independent groups regarding frequencies
-#### dichotomous data
-fisher-yates-test, chi-square test
-#### polytomous data
-freeman-halton-test, chi-square-test
+## Comparing two independent groups regarding frequencies
 
-### Comparing several independent groups regarding frequencies
+### dichotomous data
+#### $\chi^2$-Test ($2\times 2$)
+
+#### Fisher-Yates-Test  ($2\times 2$) 
+In presence of small sample sizes, the aforementioned $\chi^2$-test can lead to inaccurate results because the $\chi^2$-test relies on the approximate $\chi^2$-distribution. In this case, the exact fisher-yates-test can be used for 2way-table. In `R` the function `fisher.test()` can be used to conduct this test. This function can either take a two-dimensional contingency table or two factors. Again, the `Toxaemia` data is used and 
+```{r fisher-test}
+(fisher_tox <- fisher.test(Toxaemia$hyper, Toxaemia$urea,
+                           alternative = "greater")) # default: two.sided
+```
+Fisher's exact test resulted in a non-significant result, $OR =$ `r fisher_tox$estimate`, $95\% CI$ [`r fisher_tox$conf.int[1]`, `r fisher_tox$conf.int[2]` ].
+
+### polytomous data
+
+#### $\chi^2$-Test ($2\times k$)
+In order to compare two independent groups in regard to a frequency variable with $k$ levels, the $\chi^2$-test can be used. 
+
+
+
+```{r chi-sq-2xk}
+(chi_2_k <- chisq.test(Toxaemia$hyper, Toxaemia$class))
+```
+The $\chi^2$-test resulted in a non-significant result, $\chi^2$ (`r chi_2_k$parameter`) $=$ `r chi_2_k$statistic`, $p =$ `r chi_2_k$p.value`.
+
+
+
+**Post hoc tests with standardized residuals**
+
+There are standardized residuals ($z$-scores) and adjusted standardized residuals. The adjusted standardized residuals stem from the fact that under the H0 the standardized residuals have a mean of 0 but their asymptotic variance is less than 1.0 (Agresti, 2012). 
+
+To break down a significant $\chi^2$-test, the function `chisq.posthoc.test()` of the likewise called package can be used. This function only takes a contingency matrix as input. 
+
+```{r chi-sq-posthoc}
+chisq.posthoc.test(xtabs(~ Toxaemia$hyper + Toxaemia$class))
+```
+A good visualization is the mosoaic plot of the (adjusted) standardized residuals. 
+
+**Additive decomposition of the $\chi^2$ value**
+
+The approach of the additive decomposition of the $\chi^2$ value is similar to contrasts in ANOVA. 
+
+- Create independent chunks that result in a 2 by 2 design
+- Calculate the $\chi^2$ test, however, the used marginal sums are the ones from the global $\chi^2$ test
+- The $\chi^2$ values of the chunks add up to the overall $\chi^2$ value. 
+
+
+**Assumptions**
+
+- Independent data
+- Expected frequencies should be greater than 5
+
+
+#### Freeman-Halton-Test ($2 \times k$)
+
+
+## Comparing several independent groups regarding frequencies
 chi-square-test, fuchs-kennet-outliertest
 
-## Comparing dependent groups regarding frequencies
+# Comparing dependent groups regarding frequencies
 For this section the data `dep_data` is used:
 ```{r dep_data}
 dep_data
@@ -61,23 +120,24 @@ dep_data
 xtabs(~ outcome + treatment, dep_data)
 ```
 
-### Comparing two dependent groups regarding frequencies
-#### dichotomous data
+## Comparing two dependent groups regarding frequencies
+### dichotomous data
 McNemar-test, 
-#### polytomous data
+
+### polytomous data
 Marginalhomogenitätstest nach Lehmacher, Bowker-symmetry-test
 
-### Comparing several dependent groups regarding frequencies
+## Comparing several dependent groups regarding frequencies
 
 
-#### dichotomous data
+### dichotomous data
 Cochran's Q test can be used to compare several dependent dichotomous measurements. The package `rstatix` provides the function `cochran_qtest()`.
 
 Assumptions of the Cochran's Q test:
 1. Independent observations
 2. The asymptotic test (used in the following) should be used in case of $N \times m \geq 24$. Otherwise, the exact Q-Test must be used
 
-```{r cochran's q}
+```{r cochrans q}
 cochran_qtest(dep_data, outcome ~ treatment | participant )
 ```
 
@@ -91,7 +151,7 @@ pairwise_mcnemar_test(data = dep_data, formula = outcome ~ treatment | participa
 The pairwise comparision showed that only treatment A and C differ significantly from each other, $p = .040$.
 
 
-#### polytomous data
+### polytomous data
 
 
 
