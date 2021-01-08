@@ -1,0 +1,180 @@
+---
+title: "Multivariate Analysis of Variance (MANOVA)"
+author: "Felix Eßer"
+date: "1/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+The multivariate analysis of variance (MANOVA) is a statistical procedure to compare groups in regard to means on more than one outcome variable. 
+
+Why MANOVA:
+
+- $\alpha$ error cumulation through multiple testing
+  + in conjunction: greater power (however besides intercorrelation of the outcomes also the effect sizes influence power)
+- respects relationships among the outcome variables
+  + possible detection whether groups differ along a combination of dimensions
+
+Reasons to conduct multiple ANOVAs:
+
+- outcome variables cannot be put in a joint theoretical framework (no relationship among the outcome variables)
+- obtain exploratory group differences
+- replication of former ANOVA results
+
+
+## Theory of MANOVA
+
+### Decomposition of measured scores
+
+SSCP = sum of squares and cross product matrix
+
+$\mathbf{T}$ = Total SSCP  
+$\mathbf{B}$ = Between SSCP  
+$\mathbf{W}$ = Within SSCP  
+
+Indices:  
+$m$ = Index of person, $m = 1,..., N$, where $N$ is the number of persons  
+$i$ = Index of outcome variable, $i = 1,..., p$, where $p$ is the number of outcome variables  
+$j$ = Index of group, $j = 1,..., k$, where $k$ is the number of groups  
+
+Therefore, $x_{mij}$ denotes the value from person $m$ on outcome variable $i$ in group $j$. 
+
+$$\mathbf{T} = \mathbf{B} + \mathbf{W}$$
+$$ \begin{pmatrix}
+  SS_{T~1,1} & CP_{T~1,2} & \cdots & CP_{T~1,p} \\
+	CP_{T~2,1} & SS_{T~2,2} & \cdots & CP_{T~2,p} \\
+	\vdots  & \vdots  & \ddots & \vdots  \\
+	CP_{T~p,1} & CP_{T~p,2} & \cdots & SS_{T~p,p} 
+  \end{pmatrix} = 
+  \begin{pmatrix}
+  SS_{B~1,1} & CP_{B~1,2} & \cdots & CP_{B~1,p} \\
+	CP_{B~2,1} & SS_{B~2,2} & \cdots & CP_{B~2,p} \\
+	\vdots  & \vdots  & \ddots & \vdots  \\
+	CP_{B~p,1} & CP_{B~p,2} & \cdots & SS_{B~p,p} 
+  \end{pmatrix} +
+    \begin{pmatrix}
+  SS_{W~1,1} & CP_{W~1,2} & \cdots & CP_{W~1,p} \\
+	CP_{W~2,1} & SS_{W~2,2} & \cdots & CP_{W~2,p} \\
+	\vdots  & \vdots  & \ddots & \vdots  \\
+	CP_{W~p,1} & CP_{W~p,2} & \cdots & SS_{W~p,p} 
+  \end{pmatrix}$$
+
+
+
+Calculation of the elements of the total SSCP:  
+$\displaystyle SS_{T~i,i} = \sum_{j = 1}^{J}\sum_{m=1}^{n_j} \left( x_{mij} - \overline{x}_{i} \right)^2$  
+$\displaystyle CP_{T~h,i} = \sum_{j=1}^J\sum_{m=1}^{n_j} \left(x_{mhj} - \overline{x}_h\right) \cdot \left(x_{mij} - \overline{x}_i \right)$,    where $h \in [1,p] \land h \neq i$ 
+
+The $SS_{T~i,i}$ denotes the total sum of squares. It is a unstandardized measure for the interindividual variability on one outcome variable irrespective of the groups.  
+The $CP_{T~h,i}$ denotes the total sum of cross products. It is a unstandardized measure capturing the relationship between two outcome variables irrespective of the groups. 
+
+Calculation of the elements of the between SSCP:
+$\displaystyle SS_{B~i,i} = \sum_{j = 1}^{J}{n_j~\cdot~\left(\overline{x}_{ij}  - \overline{x}_i\right)^2}$  
+$\displaystyle CP_{B~h,i} = \sum_{j=1}^J n_j \cdot \left(x_{hj} - \overline{x}_h\right) \cdot \left(x_{ij} - \overline{x}_i \right)$,    where $h \in [1,p] \land h \neq i$ 
+
+The $SS_{B~i,i}$ denotes the between sum of squares. It is a unstandardized measure for the variability of one outcome variable between the groups.  
+The $CP_{B~h,i}$ denotes the between sum of cross products. It is a unstandardized measure capturing the relationship between two outcomes group means deviation from the grand mean.
+
+Calculation of the elements of the within SSCP: 
+$\displaystyle SS_{W~i,i} = \sum_{j = 1}^{J}\sum_{m=1}^{n_j} \left( x_{mij} - \overline{x}_{ij} \right)^2$  
+$\displaystyle CP_{W~h,i} = \sum_{j=1}^J\sum_{m=1}^{n_j} \left(x_{mhj} - \overline{x}_{hj}\right) \cdot \left(x_{mij} - \overline{x}_{ij} \right)$,    where $h \in [1,p] \land h \neq i$ 
+
+The $SS_{W~i,i}$ denotes the within sum of squares. It is a unstandardized measure for the variability of one outcome variable within the groups.  
+The $CP_{B~h,i}$ denotes the with sum of cross products. It is a unstandardized measure capturing the relationship between two outcomes within groups.
+
+
+### Hypotheses and test statistics
+
+
+
+### Discriminant function
+
+
+## Load packages and data
+
+```{r packages, results='hide', message=FALSE}
+library(biotools) # Box-M test
+library(skimr)
+library(tidyverse)
+```
+
+```{r data}
+# Import data from psych package on ability measures
+sat_data <- psych::sat.act %>% 
+  as_tibble() %>% 
+  mutate(gender = factor(gender, labels = c("male", "female")),
+         education = factor(education))
+  
+glimpse(sat_data)
+```
+| Variable  | Meaning                                                        |
+|-----------|----------------------------------------------------------------|
+| gender    | males = 1, females = 2                                         |
+| education | self reported education 1 = high school... 5 = graduate work   |
+| age       | in years                                                       |
+| ACT       | ACT composite scores may range from 1 -- 36; Norms: mean of 20 |
+| SATV      | SAT verbal scores may range from 200 -- 800                    |
+| SATQ      | SAT quantitative scores may range from 200 -- 800              |
+
+
+ The following model will be analyzed: `ACT`, `SATV` and `SATQ` are the outcome variables and `education` is the grouping variable.
+
+
+# Assumptions of MANOVA
+1. Independent residuals
+    - within and between groups
+2. Multivariate normality of the residuals
+    - can be tested with Merida's test of multivariate normality
+3. Homogeneity of the residual covariance matrices
+    - this includes homoskedasticity (homogeneity of variance = equal residual variances) and homogeneity of the residual covariances between the groups
+    - can be tested with the Box-M Test
+
+## Testing the Assumptions
+
+### 1. Independent residuals
+### 2. Multivariate normality of the residuals
+### 3. Homogeneity of the residual covariance matrix
+
+```{r box-m-test}
+#boxM(sat_data[, c("ACT", "SATV", "SATQ")], factor(sat_data$gender)) # does not work
+```
+
+
+# MANOVA
+
+```{r}
+manova_mod <- manova(cbind(ACT, SATV, SATQ) ~ education, data = sat_data)
+sapply(c(1,2,3), function(x) sum(1,x))
+
+
+sapply(c("Pillai", "Wilks", "Hotelling-Lawley", "Roy"), function(x) summary(manova_mod, test = x))
+
+walk(c("Pillai", "Wilks", "Hotelling-Lawley", "Roy"), ~summary(manova_mod, test = .x))
+
+tests <- c("Pillai", "Wilks", "Hotelling-Lawley", "Roy")
+for (name in 1:length(tests)) {
+  print(name)
+  print(summary(manova_mod, test = tests[[name]]))
+}
+
+summary(manova_mod, test = "Pillai")
+
+```
+
+# Discriminant Function Analysis
+
+
+# Combined Report
+
+
+
+
+
+
+
+
+
