@@ -1,0 +1,39 @@
+---
+title: "Introduction to Count Regression"
+author: "Felix Eßer"
+date: "1/28/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Count Regression
+
+Ordinary least squares estimation in the classical regression framework is not viable for a count variable as a dependent variable. The reasons are:  
+- Counts cannot be negative but a linear model implies possible negative estimates
+- Counts can only take on integer values. This makes the error term in the general linear model inconsistent
+- Count data often exhibit heteroscedasticity (larger variance with larger mean, meaning more error at higher count values)
+
+
+Difference between true zeros and excess zeros:
+- true zeros: had the chance for a count, so 0 is an actual value
+- excess zeros: had not the chance for a count, so 0 
+
+
+# Overview over Count Regression Models
+
+- Poisson Regression
+    + one parameter model
+- Negative Binomial Regression
+    + two parameter model (mean of distribution and overdispersion parameter $\alpha$)
+    + if $\alpha$ = 0 --> negative binomial distribution = poisson distribution
+- Zero-Inflated Count Models
+    + Zero-Inflated Poisson
+    - Zero-Inflated Negative Binomial
+- Zero-truncated Count Models
+    + in these models 0 does not happen (or very unlikely?!)
+- Hurdle Models
+  + one model for modeling zeros (binomi) and one model for modeling counts > 0 
+  + poisson-logit hurdle regression
