@@ -14,9 +14,6 @@ discrete dependent variables
 Predicting of Y occuring given known values of predictors
 
 
-
-
-
 Odds: Probability of an event occurring divided through the probability of the event not occurring
 
 
@@ -66,9 +63,26 @@ Odds: Probability of an event occurring divided through the probability of the e
  
 
 
-# Logistic Regression 
+# Binary Logistic Regression 
 binary/dichotomous dependent variable 
+
+
+## Assumptions of Logistic Regression
+
+1. Binary dependent variable fullfilling the MECE-rule
+    - MECE = mutually exclusive and collectively exhaustive; meaning one case must be classified in one and only one of the two dependent categories of the binary dependent variable
+2. Independent observations
+3. Conditional binomial distribution
+    - implies that the conditional variance is 
+4. Absence of multicolinearity
+5. Linear realtionship between predictors and logit
+    - test the interaction effect between the predictor and the natural log of the predictor
+
 
 
 # Multinomial Logistic Regression
 multinomial/polychotomous dependent variable
+
+
+
+# Theory and Mathematics of Logisitic Regression
