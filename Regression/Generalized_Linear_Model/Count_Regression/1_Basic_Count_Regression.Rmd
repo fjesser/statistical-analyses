@@ -1,0 +1,18 @@
+---
+title: "Basic Count Regression Models"
+author: "Felix Eßer"
+date: "2/18/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+# Poisson Regression
+
+# Quasi-Poisson Regression
+
+# Negative-Binomial Regression
