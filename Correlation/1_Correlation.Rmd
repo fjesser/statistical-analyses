@@ -56,9 +56,30 @@ value range: [0, 1]
 
 # Two Ordinal Variables
 
+Kendall's $\tau$
+-> used for singular ordinal variables without tied ranks
+
+$e$ coefficient
+--> used for singular ordinal variables with tied ranks
+
+
+$\gamma$ coefficient
+-> used for ordinal variables with ordered categories
+
+
+polychoric correlation
+-> used for ordinal variables with ordered categories
+-> assumes that metric normally distributed variables underlie both ordinal variables with 
+
+
+Somer's $d$
+-> used for a singular ordinal variable (can have ties) and a ordinal variable with ordered categories
 
 # Two Metric Variables
 
+## Pearson's Product-Moment-Correlation
+
+value range: $[-1, +1]$
 
 
 
@@ -66,6 +87,39 @@ value range: [0, 1]
 
 # A Nominal and a Metric Variable
 
+dichotomous nominal variable:
+point-biserial correlation
+biserial correlation
+
+polytomous nominal variable:
+eta = square root of eta squared (from ANOVA)
+-> eta for dichotomous nominal variable corresponds with point-biserial correlation
+
+
 # A Ordinal and a Metric Variable
+
+ordinal variable with ordered categories
+polyserial correlation
+- assumes that a metric variable underlies the ordinal variable
+
+
+singular ordinal variable
+
+
+
+
+
+
+
+
+# Appendix: Theory and Mathematics of the Correlation Coefficients
+
+
+
+
+# Two Metric Variables
+
+$$CP_{XY} = \sum^n_{i = 1} (x_i - \bar{x}) \cdot (y_i - \bar{y})$$
+
 
 
