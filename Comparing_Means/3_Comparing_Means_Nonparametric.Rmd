@@ -1,0 +1,70 @@
+---
+title: "Nonparametric Comparison of Means"
+author: "Felix Eßer"
+date: "3/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+```{r packages}
+library(coin)
+library(tidyverse)
+```
+
+
+# Comparison of two independent groups - Fisher-Pitman-Test
+
+```{r}
+ind_data <- tibble(value = c(18, 24, 25,
+                             21, 29, 29, 30, 31, 31, 31),
+                   grp = factor(rep(c(1, 2), c(3,7))))
+ind_data
+
+oneway_test(value ~ grp, data = ind_data, alternative = "less")
+oneway_test(value ~ grp, data = ind_data, alternative = "less", distribution = "asymptotic")
+oneway_test(value ~ grp, data = ind_data, alternative = "less", distribution = "exact")
+
+```
+
+
+
+# Comparison of two dependent groups - Fishers randomization test for 2 dependent variables
+
+
+Comparison of Fisher Test with:
+
+- Sign-Test (create link)
+    + sign test only considers frequency of negative and positive differences
+    + sign test does not take into account size of differences
+- Wilcoxon signed-rank test (create link)
+    + weighs signs of differences with corresponding ranks
+- Fishers randomization test
+    + wighs signs of differences with numerical differences 
+    
+--> Fishers randomization test uses the most of the data but it has to be applicable.
+
+
+## Assumptions
+1. Independent observation of paired observation 
+
+
+```{r}
+dep_data <- tibble(id = factor(1:10), 
+       pre = c(17, 22 , 22, 15, 24, 22, 21, 21, 17, 21),
+       post = c(20, 21, 21, 22, 24, 22, 23, 21, 22, 23)) %>% 
+  pivot_longer(c(pre, post), names_to = "time", 
+               names_transform = list(time = as.factor))
+
+dep_data
+oneway_test(value ~ time | id, data = dep_data, distribution = "exact", alternative = "greater")
+```
+
+
+# Comparision of several independent groups - Oneway randomization ANOVA
+
+
