@@ -324,8 +324,27 @@ glimpse(data_dep)
 
 ### Assumptions of ANOVA for several dependent groups
 
+-   Assumption of sphericity
+
+    -   The variances of the differences between all pairs of conditions (repeated measures) have to be equal.
+    -   This assumption is sometimes called circularity assumption.
+    -   If this assumption is violated the $F$-statistic is to liberal (too many false positive results)
+
+-   Assumption of normally distributed residuals
+
+$$SS_T~~=~~SS_{BP}~+ \underbrace{SS_{WP}}_{SS_M + SS_R}$$
+
+(a less restrictive form of compound symmetry, which assumes that the variances of the differences between data taken from the same participant (or other entity being tested) are equal. This assumption is most commonly found in repeated-measures ANOVA but applies only where there are more than two points of data from the same participant (see also Greenhouse--Geisser correction, Huynh--Feldt correction).)
+
 #### Testing the Assumptions of ANOVA for several dependent groups
 
+The assumption of sphericity can be tested with Mauchly's test. Mauchly's test tests the hypothesis that the variances of the differences between all pairs of conditions are equal. The statistic distributes approximately as a $\chi^2$ distribution with $k$-1 degrees of freedom ($k$ = number of dependent samples). However this test is often very strict (liberal), meaning it becomes significant when the normality assumption is violated.
+
+Index $\varepsilon_{Box}$ is a index indicating how much the covariance-matrix of the population deviates from sphericity. This index varies between $\frac{1}{k-1}$ and 1, where $k$ is the number of repeated conditions. If $\varepsilon_{Box} = 1$ the matrix shows perfect sphericity. $\varepsilon_{Box}$ can be estimated via different methods which lead to different corrections of the degrees of freedom of the $F$-test.
+
+If the assumption of sphericity does not hold, there are two commonly known correction methods: 1. Greenhouse-Geiser correction (Greenhouse & Geisser, 1959) - The Greenhouse-Geiser correction $\hat{\varepsilon}$ varies between $\frac{1}{k-1}$ and 1, where $k$ is the number of repeated conditions. - The closer $\hat{\varepsilon}$ is to 1, the more homogeneous the differences of variances are. - Multiplication of $\hat{\varepsilon}$ with the degrees of freedom of the critical $F$ statistic - In general, if $\hat{\varepsilon} < .75$, then the sphericity assumption is violated. - If $\hat{\varepsilon} > .75$, the Greenhouse-Geiser correction is too conservative, meaning too many false null hypotheses are not rejected ( $\beta$-error; Huynh & Feldt, 1976) 2. Huynh-Feldth correction (Huynh & Feldt, 1976) - the Huyn-Feldth correction $\tilde{\varepsilon}$ varies between ... and ... - uses $\hat{\varepsilon}$ and corrects it - $\tilde{\varepsilon}$ is greater than $\hat{\varepsilon}$, which results in a smaller correction - $\tilde{\varepsilon}$ overestimates sphericity (Maxwell & Delaney, 1990)
+
+Also possible to model dependent data within a multilevel modeling framework.
 
 ### Dependent Samples ANOVA with `{stats}`
 
