@@ -521,6 +521,39 @@ There are $s$ non redundant pairs of comparison $$s = \frac{1}{2} \cdot K \cdot 
 
 ### Two-way ANOVA
 
+$$SS_T = SS_A + SS_B + SS_{A \times B} + SS_W$$
+
+In the two-way ANOVA, there are three possible effect (main effect of factor $A$, main effect of factor $B$ and interaction effect of factor $A$ and $B$). For each effect a effect measure can be estimated. This is called the non-partial effect size measure:
+
+$$\hat{\eta}^2_p = \frac{SS_\text{Effect}}{SS_T}$$. 
+
+$$\hat{\eta}^2_\text{Total} = \hat{\eta}^2_A + \hat{\eta}^2_B + \hat{\eta}^2_{A \times B}  $$
+
+Size of $\hat{\eta}^2_p$ depends on how large other effects in the study are.
+
+
+
+Another effect size measure is the partial effect size:
+$$\hat{\eta}^2_{p\_\text{Effect}} = \frac{SS_\text{Effect}}{SS_\text{Effect} + SS_W}$$
+
+partial effect sizes do not add up to the total effect
+
+
+
+Use non-partial effect size if effect sizes should be compared to to other effects within the ANOVA.
+Use partial effect size if effect size should be compared to other studies.
+
+
+However, like in one-way ANOVA the effect measure $\hat{\eta}^2$ overestimates the effect in the population. Similarly, the effect size measure $\hat{\omega}^2$ is a non-biased effect measure. There is also a non-partial and a partial effect measure:
+
+$$\hat{\omega}^2_\text{Effect} = \frac{SS_\text{Effect} - df_\text{Effect} \cdot MS_W}{SS_T + MS_W}$$
+
+$$\hat{\omega}^2_{p\_\text{Effect}} = \frac{SS_\text{Effect} - df_\text{Effect} \cdot MS_W}{SS_\text{Effect} + (N - df_\text{Effect}) \cdot MS_W} $$
+
+
+
+
+
 ## Comparing several dependent samples
 
 ## Comparing independent and dependent samples
