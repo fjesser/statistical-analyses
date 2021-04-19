@@ -32,6 +32,17 @@ library(tidyverse) # data wrangling, plotting, etc.
 # Comparing an observed mean to an expected mean - one sample $t$-test
 
 # Comparing two independent groups - independent two sample $t$-tests
+
+```{r independent-data}
+# Save ToothGrowth dataset as indep_data
+indep_data <- datasets::ToothGrowth %>%
+  as_tibble() # save data.frame as tibble
+
+# Output independent dataset
+indep_data
+```
+
+
 # Comparing two dependent groups - dependent two sample $t$-test
 
 The means on a metric outcome of two dependent samples can be compared with the $t$-test for dependent samples. Dependent samples can arise through repeated measurement of the same cases. As long as one measurement of one sample can be connected to a measurement of the other sample, dependent samples are present. Therefore, spouses are also an example of dependent samples.
