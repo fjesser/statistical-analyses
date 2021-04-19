@@ -348,8 +348,23 @@ Also possible to model dependent data within a multilevel modeling framework.
 
 ### Dependent Samples ANOVA with `{stats}`
 
+```{r}
+dep_anova <- aov(circumference ~ measurement + Error(tree), data = data_dep)
+
+```
+
 ### Dependent Samples ANOVA with `{afex}`
 
+```{r}
+library(afex)
+data_dep2 <- afex::obk.long
+
+dep_anova2 <- aov_ez(id = "id", dv = "value", data = data_dep2, within = "phase")
+summary(dep_anova2)
+
+```
+
+Mauchly's test resulted in a non-significant value, \$\chi\^2(2) = 0.7
 
 ### Effect Sizes
 
