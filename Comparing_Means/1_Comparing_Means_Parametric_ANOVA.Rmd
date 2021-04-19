@@ -459,6 +459,66 @@ pairs(em_mix_anova)
 
 ### One-way ANOVA
 
+Indices: Conditions: $k$ = 1, .., $K$ Cases: $n$ = 1, ..., $N$
+
+Composition of the measurement $y_{nk}$ of case $n$ which is in condition $k$ in two kinds of variation: $$ y_{nk} = \overline{y}_k + (y_{nk} - \overline{y}_k) = \overline{y}_k + e_{nk}$$,
+
+where $\overline{y}_k$ is the mean of the condition (factor level) and $e_{nk}$ is the deviation of case $n$ from the mean of condition $k$.
+
+Composition of the mean of the condition: $$ t_j =  \overline{y}_k - \overline{y}$$,
+
+where $t_j$ is the treatment effect and $\overline{y}$ is the grand mean. The grand mean is the mean over all values irrespective a any condition. For unbalanced data (different group sizes) the grand mean is calculated by: $$ \overline{y} = \Sigma_{k = 1}^K \frac{N_j}{N} \cdot \overline{y}_k$$,
+
+where $N_k$ is the number of cases within a condition.
+
+Sum of Squares:
+
+$$SS_T = SS_B + SS_W$$
+
+$SS_T$ = total sum of squares; represents the total variation of the data which can be decomposed $$SS_T = \Sigma_{k=1}^{K} \Sigma_{n=1}^{N} (y_{kn} - \overline{y})^2$$
+
+$SS_B$ = between sum of squares; represents the variation between conditions $$SS_B = \Sigma_{k = 1}^K ~~ N_j \cdot (\overline{y}_k - \overline{y})^2$$
+
+$SS_W$ = within sum of squares; represents the variation within conditions $$SS_W = \Sigma_{k = 1}^K \Sigma_{n = 1}^{N_j} (y_{nk} - \overline{y}_k )^2$$
+
+In one-way ANOVA the systematic variation ($SS_B$) is of interest.
+
+As the sum of squares $SS$ are dependent on the sample size, they have to be relativized to the degrees of freedom ($df$). In general, this results in mean squares ($MS$): $$MS_x = \frac{SS_x}{df_x}$$
+
+For each sum of squares ($SS$) a corresponding means squares ($MS$) can be calculated: Total mean squares: $$MS_{T} = \frac{SS_T}{df_T} = \frac{\Sigma_{k=1}^{K} \Sigma_{n=1}^{N} (y_{kn} - \overline{y})^2}{N-1}$$, with
+
+$df_T = N - 1$.
+
+Between mean squares: $$MS_B = \frac{SS_B}{df_B} = \frac{\Sigma_{k = 1}^K ~~ N_j \cdot (\overline{y}_k - \overline{y})^2}{K-1}$$, with
+
+$df_B = K - 1$.
+
+Within mean squares: $$MS_W = \frac{SS_W}{df_W} = \frac{\Sigma_{k = 1}^K \Sigma_{n = 1}^{N_j} (y_{nk} - \overline{y}_k )^2}{N - K}$$, with
+
+$df_W = N - K$.
+
+Similar to the sum of squares ($SS$), additivity applies to the degrees of freedom ($df$): $$df_T = df_B + df_W$$.
+
+The same does not apply for the mean squares ($MS$): $$MS_T \neq MS_B + MS_W$$ because if the null-hypothesis is true, all mean squares estimate the same, the population variance.
+
+If the null-hypothesis is not true, $MS_B$ incorporates systematic variance. Dividing $MS_B$ by $MS_W$ results in a $F$-statistic by which it is possible to decide whether the null-hypothesis has to be rejected or not. $$F = \frac{MS_B}{MS_W}$$ The $F$ statistic has $df_B$ numerator degrees of freedom and $df_W$ denominator degrees of freedom. This empirical $F$ value can be compared to a critical $F$ value, given an $\alpha$ level, and the statistical significance can be assessed (if $F_{emp} > F_{crit}$ than the null-hypothesis has to be rejected).
+
+An estimate of the effect is $\hat{\eta}^2$:
+
+$\hat{\eta}^2 = \frac{SS_B}{SS_T}$. $\hat{\eta}^2}$ is the proportion of the systematic variation in the total variation and varies between 0 (no effect) and 1 (perfect effect = all variation is explained by the conditions). Numerator and denominator can be devided by the total sample size $N$ which results in the proportion of the systematic variance in the total variance (is equal to the aforementioned).
+
+However, $\hat{\eta}^2$ is a positively biased effect measure (estimated effect is larger than the actual effect size). Accordingly, other effect measures have been developed like $\hat{\omega}^2$ or $f$: $$\hat{\omega}^2 = \frac{SS_B - (K-1) \cdot MS_W}{SS_T + MS_W}$$
+
+$$ f = \hat{\phi} = \sqrt{\frac{\hat{\eta}^2}{1 - \hat{\eta}^2}}$$, here $\hat{\eta}^2$ can be substituted by $\hat{\omega}^2$.
+
+In contrast to the confidence intervals for $\hat{\eta}^2$, the confidence intervals for the effect estimate $\hat{\omega}^2$ do not correspond with the null-hypothesis test.
+
+Assumption of independent residuals: $Cov(\varepsilon_n, \varepsilon_n') = 0$; The covariance between residuals is zero.
+
+Assumption of normally distributed and homoskedastic residuals: $\varepsilon_{nk} \sim \mathcal{N}(0, \sigma^2_\varepsilon$
+
+There are $s$ non redundant pairs of comparison $$s = \frac{1}{2} \cdot K \cdot (K-1)$$
+
 ### Two-way ANOVA
 
 ## Comparing several dependent samples
