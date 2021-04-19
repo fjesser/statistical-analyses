@@ -252,10 +252,31 @@ summary(anova_afex)
 
 #### Contrasts with `{stats}`
 
+Set contrasts as attribute to the factor in the `data.frame`
+
+```{r}
+contrasts(data_indep1$group) <-  contr.helmert(3) # 3 groups / levels of factor
+```
+
 ### Post-hoc Tests
 
 #### Adjustment of the $\alpha$-error of specific comparisons
 
+```{r}
+pairwise.t.test(data_indep1$weight, data_indep1$group,
+                p.adjust.method = "bonferroni",
+                alternative = "two.sided") # default: two.sided 
+```
+
+Available $p$-value adjustments in the base `R` `{stats}` package: 1. holm 2. hochberg 3. hommel 4. bonferroni 5. BH (Benjamini & Hochberg) --\> controls for false discovery rate 6. fdr = same as BH 7. Benjamini, Hochberg, and Yekutieli --\> controls for false discovery rate
+
+#### Adjustment of the critical values for multiple comparisons
+
+Use `TukeyHSD()` function from `{stats}` package
+
+```{r}
+TukeyHSD(anova_aov)
+```
 
 ### Report
 
