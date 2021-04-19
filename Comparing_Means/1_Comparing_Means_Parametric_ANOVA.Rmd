@@ -195,8 +195,58 @@ tapply(data_indep1$weight, data_indep1$group, shapiro.test)
 
 ### One-way ANOVA analysis with `{stats}`
 
+One-way ANOVA can be conducted with the `aov()` function of the `{stats}` package.
+
+```{r indep1-anova-aov}
+# Perform one-way ANOVA
+anova_aov <- aov(weight ~ group, data = data_indep1)
+
+# Get results
+summary(anova_aov) # same as: anova(anova_aov)
+```
+
+Note that the ANOVA can be reframed as a linear model. In this case the three factor level will be coded into two dummy variables (number of dummy variables = $k -1$, where $k$ is the number of levels). In this way the one-way ANOVA can be computed via the `lm()` function of the `{stats}` package.
+
+```{r indep1-anova-lm}
+# Perform one-way ANOVA with lm()
+anova_lm <- lm(weight ~ group, data = data_indep1)
+
+# Get results
+summary(anova_lm)
+```
+
+The estimate of the intercept represents the mean of the reference group (here control group). The estimates of the other coefficients are the respective difference of the corresponding group to the reference group.
+
+Both, the `aov()` and the `lm()` function, calculate the same model but the results are presented differently.
+
+It is possible to transform the `aov()` output into the `lm()` output and vice versa.
+
+```{r indep1-anova-aov-to-lm}
+# Transform aov() output into lm() output
+summary.lm(anova_aov)
+
+# Transform lm() output into aov() output
+summary.aov(anova_lm) # same as anova(anova_lm)
+
+```
+
+A better function is the `oneway.test()` function of the `{stats}` package because it corrects for unequal variances.
+
+```{r indep1-anova-oneway}
+# Performing one-way ANOVA without assuming equal variances
+oneway.test(weight ~ group, data = data_indep1)
+```
+
 ### One-way ANOVA analysis with `{afex}`
 
+```{r indep1-anova-afex}
+# Perform one-way ANOVA with afex-package
+anova_afex <- aov_ez(id = "ID", dv = "weight", between = "group",
+                     data = data_indep1)
+
+# Get results
+summary(anova_afex)
+```
 
 ### Contrasts
 
