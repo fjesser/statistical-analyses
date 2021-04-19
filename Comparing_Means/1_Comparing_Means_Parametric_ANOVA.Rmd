@@ -556,4 +556,20 @@ $$\hat{\omega}^2_{p\_\text{Effect}} = \frac{SS_\text{Effect} - df_\text{Effect} 
 
 ## Comparing several dependent samples
 
+To add - compound symmetry and sphericity
+
+$$SS_T~~=~~SS_{BP}~+ \underbrace{SS_{WP}}_{SS_M + SS_R}$$ 
+
+$SS_T$ = total sum of squares 
+$SS_B$ = between participants sum of squares 
+$SS_W$ = within participants sum of squares
+
+$SS_M$ = model sum of squares (between persons sum of squares) $SS_R$ = residual sum of squares
+
+Indices: Conditions: $k$ = 1, .., $K$ Cases: $n$ = 1, ..., $N$
+
+$$SS_T = \Sigma_{k=1}^{K} \Sigma_{n=1}^{N} (x_{kn} - \overline{x})^2$$ $SS_T$ = Sum of squared deviations of all measurements from the grand mean.
+
+$SS_W$ =
+
 ## Comparing independent and dependent samples
