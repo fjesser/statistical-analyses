@@ -9,12 +9,66 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Introduction
+# Introduction
 
-## Comparing an observed mean to an expected mean
 
-## Comparing two groups - t-Tests
+Comparing two means.
 
-### Comparing two independent groups
+Effect sizes:
+- cohen's $d$ is positively biased, hedges' $g$ is a bias corrected version for small sample sizes.
 
-### Comparing two dependent groups
+
+
+
+# Packages
+
+```{r packages}
+library(effectsize) # for effect size
+library(skimr) # descriptive statistics
+library(tidyverse) # data wrangling, plotting, etc.
+```
+
+
+# Comparing an observed mean to an expected mean - one sample $t$-test
+
+# Comparing two independent groups - independent two sample $t$-tests
+# Comparing two dependent groups - dependent two sample $t$-test
+
+## Assumptions of the dependent $t$-test
+
+## Conducting the dependent $t$-test
+
+## Reporting the dependent $t$-test
+
+## Visualizing Results
+
+# Appendix: Theory and Mathematics of the $t$-tests
+
+
+# Comparing an observed mean to an expected mean
+
+# Comparing two independent groups
+
+# Comparing two dependent groups
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
