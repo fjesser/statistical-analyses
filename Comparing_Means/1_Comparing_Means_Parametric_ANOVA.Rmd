@@ -432,6 +432,26 @@ datasets::sleep
 
 ## Assumptions
 
+-   Sphericity of the dependent factor
+-   equality of variance in the independent factor
+
+```{r}
+library(afex)
+library(emmeans)
+data_dep2 <- afex::obk.long
+data_dep2
+mix_anova <- aov_ez(id = "id", dv = "value", data = data_dep2, within = "phase", between = "treatment",
+                    anova_table = list(es = "pes"))
+mix_anova <- aov_ez(id = "id", dv = "value", data = data_dep2, within = "phase", between = "treatment")
+summary(mix_anova)
+mix_anova
+
+
+# obtain emmGrid-class
+em_mix_anova <- emmeans(mix_anova, ~treatment)
+
+pairs(em_mix_anova)
+```
 
 # Appendix: Theory and Mathematics of ANOVA
 
