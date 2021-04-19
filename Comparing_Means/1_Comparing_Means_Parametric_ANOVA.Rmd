@@ -122,6 +122,10 @@ library(emmeans) # estimate marginal means
 library(multcomp) # control for alpha error in multiple testing
 library(skimr) # descriptive statistics
 library(tidyverse) # data wrangling and plotting
+
+# The afex package requires MASS which has a select function
+# In order to use the dplyr select function by default:
+select <- dplyr::select
 ```
 
 # Comparing several independent samples
