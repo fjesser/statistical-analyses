@@ -93,6 +93,26 @@ The Shapiro-Wilk test resulted in a non-signifikant result, $W$ = `r dep_shapiro
 
 
 ## Conducting the dependent $t$-test
+In `R` the $t$-test for dependent samples can be conducted with the `t.test()` function of the built-in `{stats}` package, specifying the argument `paired = TRUE`. In addition, the effect size Hedges' $g$ is calculated. In the context, of mean comparison Cohen's $d$ is a wiedly applied effect measure. However, Cohen's $d$ is positively biased. Therefore, Hedges' $g$ is used.
+
+```{r dependent-t-test}
+# Dependent t-test for data in wide format
+dep_ttest <- t.test(dep_data$post, dep_data$pre,
+                    alternative = "two.sided", # default; other: "less", "greater"
+                    paired = TRUE)
+# If the data is in long format use:
+# t.test(post ~ pre, data = dep_ttest, paired = TRUE)
+
+# Output
+dep_ttest
+
+# Calculate effect size hedges' g
+# also possible to calculate (biased) cohen's d with cohens_d()
+dep_effect <- hedges_g(dep_data$post, dep_data$pre, paired = TRUE)
+
+# Output effect size
+dep_effect
+```
 
 ## Reporting the dependent $t$-test
 
