@@ -142,6 +142,14 @@ Effect Size $\hat{\eta}^2 = \frac{SS_B}{SS_T}$ (see appendix for explanation). H
 
 #### Assumptions of one-way ANOVA
 
+1.  Independent residuals + residuals are independent from another + this assumption is fulfilled via the research design + is for example violated through repeated measures + violation increases hugely probability of committing an $\alpha$ error
+
+2.  Homoskedasticity + Equal variance of residuals between conditions + is tested with Levene's test for equal variances + The $F$-test is relatively robust against violations of the assumption of homoskedasticity if samples have the same size - if variance in smaller sample is larger than in a larger sample, the $F$-test becomes too liberal (higher risk of committing an $\alpha$ error) - if variance in smaller sample is smaller than in a larger sample, the $F$-test becomes too conservative (higher risk of committing an $\beta$ error) + If there is variance heterogeneity (heteroskedasticity), the Brown-Forsythe-test or the Welch-test can be used which correct the result. No one of both is superior to the other.
+
+3.  Normal distribution of residuals\
+
+    -   As a residuum is the deviation of a measurement from the mean of the condition, measurements have to distribute normally within conditions + On the basis of the central limit theorem, the $F$-test is relatively robust against violations against the normality assumption under large sample sizes. So you can argue this assumption away. + If the violation of the normality assumption is due to outliers, robust variants of ANOVA can be conducted.
+
 ### Data
 
 
