@@ -121,6 +121,47 @@ On average, the pre-values ($M$ = `r dep_descr$numeric.mean[which(dep_descr$skim
 
 ## Visualizing Results
 
+Problem with error bars of repeated measures designs. They should not be treated as between design; CI are too big.
+
+1. Calculate mean for each case
+2. Calculate grand-mean (over all scores)
+3. Calculate adjustment factor
+    + grand-mean minus mean of each case
+4. Create adjusted values for each dependent sample per case
+    + original value + adjusment factor
+
+```{r dependent-plot}
+# Create plot data
+dep_data <- dep_data %>%
+  rowwise() %>%
+  mutate(row_mean = mean(c(pre, post))) %>%
+  ungroup() %>%
+  mutate(grand_mean = mean(c(pre, post)), # included for clarity
+         adj_factor = grand_mean - row_mean) %>%
+  rowwise() %>%
+  mutate(across(c(pre, post),
+                ~sum(c(.x, adj_factor)),
+                .names = "adj_{.col}")) %>%
+  ungroup()
+
+# Create plot
+dep_plot <- dep_data %>%
+  select(adj_pre, adj_post) %>%
+  pivot_longer(everything(), names_to = "Measurement", values_to = "value") %>%
+  ggplot(aes(Measurement, value)) +
+  stat_summary(fun = mean, geom = "bar", fill = "white", color = "black") +
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.2) +
+  scale_x_discrete(limits = c("adj_pre", "adj_post"),
+                   labels = c("adj_post" = "Post", "adj_pre" = "Pre")) +
+  labs(y = "Mean Value") +
+  theme_minimal()
+
+# Output plot
+dep_plot
+```
+
+
+
 # Appendix: Theory and Mathematics of the $t$-tests
 
 
