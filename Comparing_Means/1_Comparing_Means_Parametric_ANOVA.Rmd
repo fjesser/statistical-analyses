@@ -9,25 +9,204 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Introduction
+# Introduction
 
-## Comparing several independent groups
+Analysis of Variance (ANOVA) is a family of analyses to compare the mean of several samples. Hence, the outcome variable has at least to be metric scale of measurement and the predictor variable(s) has/have nominal scale of measurement.
 
-### One-Way ANOVA
-
-
-#### Further Analyses
-F-Test is omnibus test
-
-Pairwise comparision:
-post-hoc tests
+In the context of ANOVA, the predictor is often called factor or independent variable (note that independent variable implies causal influence). Factors have levels which are also called conditions. For example, in a clinical study it is of interest how a new drug influences the blood pressure of patients. To assess the efficacy of the new drug it is compared to an old drug as well as a placebo. The factor *drug* in this study has three levels: 1) new drug, 2) old drug and 3) placebo. After assigning participants randomly to one of the three levels, administering the corresponding drug and measure the blood pressure, it is possible to compare the means of all blood pressures in the three conditions with a ANOVA. 
 
 
-### Two-Way ANOVA
+One-way ANOVA with factor of 3 levels.
+
+Another factor gender can be added. Then a two-way ANOVA with a 3x2 design (3 levels of factor drug and 2 levels of factor gender)
+
+Different kinds of designs: 
+- 1 factor: one-way ANOVA 
+- 2 factors: two-way ANOVA 
+- and so on
+
+It is also possible that a factor comprises dependent samples. A typical reason are repeated measures of the same cases.
+
+$F$-test is an omnibus test (global test) Follow up with contrast analysis or post-hoc tests
+
+The different kinds of ANOVA are presented in the following way: 
+1. Comparing several independent samples 
+        + One-way ANOVA 
+            e.g., the aforementioned example of the influence of different drugs on blood pressure
+        + Two-way ANOVA 
+            e.g., th
+2. Comparing several dependent samples 
+        + One-way ANOVA for dependent samples
+        + Two-way ANOVA for dependent samples
+3. Comparing independent and dependent samples
+
+fixed and random effects 
++ fixed effects - factor has fixed values - means of the factor levels are of interest + random effects - factor levels are a random draw of several possible manifestations of the factor - variance of the means of the factor levels is of interest + distinction has no consquence for one-way ANOVA but for two-way ANOVA
 
 
-## Comparing several dependent groups
 
-## Comparing independent and dependent groups
+$\alpha$-error cumulation
+
+Two approaches as follow-up analysis after a significant $F$-test: 1. Post-hoc tests 2. Contrasts analysis
+
+## Post-hoc tests
+
+Post-hoc tests compare means of different factor levels.
+
+To avoid $\alpha$-error cumulation, there are two common procedures: 
+1. Adjustment of the $\alpha$-error of specific comparisons 
+        + typically used if only selected mean comparisons are of interest
+2. Adjustment of the critical values for multiple comparisons
+        + typically used if all possible comparisons are of interest
+
+There are a lot of procedures for post-hoc test.
+
+### Adjustment of the $\alpha$-error of specific comparisons
+
+1.  Sidak Adjustment
+2.  Bonferroni Adjustment
+3.  Bonferroni-Holm Adjustment
+
+### Adjustment of the critical values for multiple comparisons
+
+1.  Tukey-Test and Tukey-Kramer-Test Tukey-test is also known as HSD-test: Honest-Significant-Difference-test. Tukey-test is requires balanced sample sizes, whereas the Tukey-Kramer-test allows for differing sample sizes.
+
+Has more power than bonferroni-correction if all means are compared with each other.
+
+2.  Dunnett-Tes
+
+## Contrast analysis
+
++-----------------------+---------------------------------------------------------------+------+
+| Name of contrasts     | Explanation                                                   | Col3 |
+|                       |                                                               |      |
+| (R Code)              |                                                               |      |
++=======================+===============================================================+======+
+| Dummy (default)       | Each factor level is compared to the first factor level.      |      |
++-----------------------+---------------------------------------------------------------+------+
+| SAS                   | Each factor level is compared to the last factor level.       |      |
+|                       |                                                               |      |
+| (`contr.SAS()`)       |                                                               |      |
++-----------------------+---------------------------------------------------------------+------+
+| Treatment             | Each factor level is compared to a user defined factor level. |      |
+|                       |                                                               |      |
+| (`contr.treatment()`) |                                                               |      |
++-----------------------+---------------------------------------------------------------+------+
+| Sum                   |                                                               |      |
+|                       |                                                               |      |
+| (`contr.sum()`)       |                                                               |      |
++-----------------------+---------------------------------------------------------------+------+
+| Helmert               |                                                               |      |
+|                       |                                                               |      |
+| (`contr.helmert()`)   |                                                               |      |
++-----------------------+---------------------------------------------------------------+------+
+| Poly                  |                                                               |      |
+|                       |                                                               |      |
+| (`contr.poly()`)      |                                                               |      |
++-----------------------+---------------------------------------------------------------+------+
+
+: Predefined Contrasts in \`R\`
 
 
+### $\alpha$-error cumulation
+
+Scheffé test
+
+# Packages
+
+```{r packages}
+library(afex) # ANOVA
+library(car) # Levene Test
+library(effectsize) # omega^2
+library(emmeans) # estimate marginal means
+library(multcomp) # control for alpha error in multiple testing
+library(skimr) # descriptive statistics
+library(tidyverse) # data wrangling and plotting
+```
+
+# Comparing several independent samples
+
+## One-way ANOVA
+
+### Theory of one-Way ANOVA
+
+#### Assumptions of one-way ANOVA
+
+### Data
+
+
+### Assessing assumptions of one-way ANOVA
+
+### One-way ANOVA analysis with `{stats}`
+
+### One-way ANOVA analysis with `{afex}`
+
+
+### Contrasts
+
+#### Contrasts with `{stats}`
+
+### Post-hoc Tests
+
+#### Adjustment of the $\alpha$-error of specific comparisons
+
+
+### Report
+
+## Two-Way ANOVA
+
+### Theory of two-way ANOVA
+
+
+# Comparing several dependent samples
+
+## One-way ANOVA for dependent samples
+
+### Theory of one-way ANOVA for dependent samples
+
+
+### Data
+
+### Assumptions of ANOVA for several dependent groups
+
+#### Testing the Assumptions of ANOVA for several dependent groups
+
+
+### Dependent Samples ANOVA with `{stats}`
+
+### Dependent Samples ANOVA with `{afex}`
+
+
+### Effect Sizes
+
+### Contrasts
+
+### Post hoc tests
+
+### Visualizing the results
+
+## Two-way ANOVA for dependent samples
+
+
+### Post-hoc tests
+
+# Comparing independent and dependent samples
+
+```{r}
+datasets::sleep
+```
+
+## Assumptions
+
+
+# Appendix: Theory and Mathematics of ANOVA
+
+## Comparing several independent samples
+
+### One-way ANOVA
+
+### Two-way ANOVA
+
+## Comparing several dependent samples
+
+## Comparing independent and dependent samples
