@@ -152,6 +152,27 @@ Effect Size $\hat{\eta}^2 = \frac{SS_B}{SS_T}$ (see appendix for explanation). H
 
 ### Data
 
+```{r indep1-data}
+# load data
+data_indep1 <- datasets::PlantGrowth %>% 
+    as_tibble() %>% # convert data.frame to tibble
+    rowid_to_column("ID") # adding ID variable
+
+# get descriptives
+skim(data_indep1)
+```
+
+In the dataset `data_indep1` the weight of plants is measured under three different conditions. Each condition comprises ten plants.
+
+```{r indep1-descr}
+# Get descriptive statistics per group
+data_indep1 %>% 
+    select(-ID) %>% # discard ID variable
+    group_by(group) %>% # group output by grouping variable 'group'
+    skim() # get descriptive statistics
+```
+
+As shown in the output the mean weight in the control group is `r mean(filter(data_indep1, group == "ctrl")$weight)`, in the first treatment group `r mean(filter(data_indep1, group == "trt1")$weight)` and in the second treatment group `r mean(filter(data_indep1, group == "trt2")$weight)`. The question which is possible to answer with the one-way ANOVA is, whether these means differ significantly or differ by chance.
 
 ### Assessing assumptions of one-way ANOVA
 
