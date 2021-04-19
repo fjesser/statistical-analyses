@@ -130,6 +130,16 @@ library(tidyverse) # data wrangling and plotting
 
 ### Theory of one-Way ANOVA
 
+The one-way ANOVA is a extension of the $t$-test.
+
+Only an omnibus test:
+
+Null-hypothesis: $H_0: \mu_i = \mu_j$ for all pairs \$(i, j),\~\~i \neq j \$ Alternative hypothesis: $H_1: \neg H_0$
+
+This hypothesis is tested via a $F$-test (always one-sided). If the null-hypothesis has to be rejected, it can only be derived **that** means differ but not which.
+
+Effect Size $\hat{\eta}^2 = \frac{SS_B}{SS_T}$ (see appendix for explanation). However, this
+
 #### Assumptions of one-way ANOVA
 
 ### Data
