@@ -305,8 +305,22 @@ marginal means
 
 ### Theory of one-way ANOVA for dependent samples
 
+It is possible to use ANOVA for repeated measures designs or other designs in which the groups under study are dependent (e.g., siblings). In general, this analysis is used for within-subject designs in which a dependent variable is measured several times on subjects.
+
+Hypothesis: Means of all related samples/groups are equal: $H_0: $
+
+sequence effects -> create link to *research methods*
 
 ### Data
+
+```{r}
+data_dep <- datasets::Orange %>% 
+    mutate(tree = factor(Tree, ordered = FALSE),
+           measurement = factor(age, labels = seq(unique(age)))) %>% 
+    select(tree, measurement, circumference)
+    
+glimpse(data_dep)    
+```
 
 ### Assumptions of ANOVA for several dependent groups
 
