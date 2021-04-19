@@ -376,8 +376,53 @@ Mauchly's test resulted in a non-significant value, \$\chi\^2(2) = 0.7
 
 ## Two-way ANOVA for dependent samples
 
+```{r}
+# simulate data of a 2x2 design with repeated measues on both factors
+
+# totally 10 people were measured:
+persons <- tibble(ID = rep(1:10, each = 9),
+                  measurement = gl(3, 3, 90, labels = c("pre", "post", "followUp")),
+                  within_measurement = gl(3, 1, 90, labels = c("first", "second", "third")))
+
+# simulate dv only dependent on pre post
+set.seed(63938)
+dv <- tibble(ID = rep(1:10, each = 3),
+             pre = rnorm(30, mean = 10, sd = 1),
+             post = rnorm(30, mean = 12, sd = 1),
+             followUp = rnorm(30, mean = 14, sd = 1)) %>% 
+    pivot_longer(cols = c(pre, post, followUp), names_to = "measurement",
+                 names_transform = list(measurement = as.factor)) %>% 
+    mutate(within_measurement = gl(3,3,90, labels = c("first", "second", "third")))
+
+sim_data <- persons %>% 
+    full_join(dv, by = c("ID", "measurement", "within_measurement"))
+
+
+two_rep <- aov_ez(id = "ID", dv = "value", within = c("measurement", "within_measurement"), data = sim_data)
+two_rep
+summary(two_rep)
+
+
+# marginal means
+    # marginal means are model based 
+ref_grid(two_rep)
+
+marginal_measurement <- emmeans(two_rep, ~ measurement)
+marginal_measurement@grid # get weights
+
+marginal_measurement
+pairs(marginal_measurement)
+
+
+afex_plot(two_rep, x = "measurement", trace = "within_measurement", error = "within")
+
+```
 
 ### Post-hoc tests
+
+```{r}
+pairwise.t.test()
+```
 
 # Comparing independent and dependent samples
 
