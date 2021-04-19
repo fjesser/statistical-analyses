@@ -116,6 +116,9 @@ dep_effect
 
 ## Reporting the dependent $t$-test
 
+On average, the pre-values ($M$ = `r dep_descr$numeric.mean[which(dep_descr$skim_variable == "pre")]`, $SD$ = `r dep_descr$numeric.sd[which(dep_descr$skim_variable == "pre")]`) were lower than the post-values ($M$ = `r dep_descr$numeric.mean[which(dep_descr$skim_variable == "post")]`, $SD$ = `r dep_descr$numeric.sd[which(dep_descr$skim_variable == "post")]`). The $t$-test for dependent samples resulted in a significant result, $t$(`r dep_ttest$parameter`) = `r dep_ttest$statistic`, $p$ = `r dep_ttest$p.value`, $g$ = `r dep_effect$Hedges_g`, 95%CI [`r dep_effect$CI_low`, `r dep_effect$CI_high`], indicating that the difference ($M$ = `r dep_descr$numeric.mean[which(dep_descr$skim_variable == "difference")]`, $SD$ = `r dep_descr$numeric.sd[which(dep_descr$skim_variable == "difference")]`) is significant.
+
+
 ## Visualizing Results
 
 # Appendix: Theory and Mathematics of the $t$-tests
