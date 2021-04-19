@@ -290,6 +290,14 @@ Visualization with bar diagram with error bars (either sd, se or ci)
 
 ### Theory of two-way ANOVA
 
+main effects and interaction effects
+
+simple effects
+- 
+
+
+marginal means 
+
 
 # Comparing several dependent samples
 
