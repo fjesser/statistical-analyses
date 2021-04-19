@@ -34,6 +34,38 @@ library(tidyverse) # data wrangling, plotting, etc.
 # Comparing two independent groups - independent two sample $t$-tests
 # Comparing two dependent groups - dependent two sample $t$-test
 
+The means on a metric outcome of two dependent samples can be compared with the $t$-test for dependent samples. Dependent samples can arise through repeated measurement of the same cases. As long as one measurement of one sample can be connected to a measurement of the other sample, dependent samples are present. Therefore, spouses are also an example of dependent samples.
+
+If the comparison of more than two dependent samples are of interest, the ANOVA for dependent samples can be used.
+
+At first the dataset will be created.
+
+```{r dependent-data}
+# Load dat
+dep_data <- data.frame(
+  pre = c(9, 8, 1, 3, 2),
+  post = c(16, 11, 15, 12, 9)
+) %>% as_tibble()
+
+# Show data
+dep_data
+```
+
+Now, we get the descriptive statistics for the two dependent samples, as well as the difference. These will be incorporated into the report of the $t$-test for dependent samples (below). The mean and standard deviation are outputted along with other statistics by aid of the `skim()` function of the `{skimr}` package.
+
+```{r descriptive-dep}
+# Calculate descriptive statistics 
+dep_descr <- 
+  dep_data %>% 
+  mutate(difference = post - pre) %>% # create difference variable
+  skim()
+
+# Output descriptive statistics
+dep_descr
+```
+
+
+
 ## Assumptions of the dependent $t$-test
 
 ## Conducting the dependent $t$-test
