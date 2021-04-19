@@ -280,6 +280,12 @@ TukeyHSD(anova_aov)
 
 ### Report
 
+Add ANOVA table (SS, df, MS, F, p, eta\^2 or omega\^2) Often the row with the total variation is ommited because it can be derived from the other sources of variance.
+
+Report in text:
+
+Visualization with bar diagram with error bars (either sd, se or ci)
+
 ## Two-Way ANOVA
 
 ### Theory of two-way ANOVA
