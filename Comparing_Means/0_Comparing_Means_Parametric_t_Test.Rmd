@@ -68,6 +68,30 @@ dep_descr
 
 ## Assumptions of the dependent $t$-test
 
+The $t$-test for dependent samples has the following two assumptions:
+1. Metric scale of measurement of the outcome and two dependent samples as predictor
+2. Independent observations *within* the dependent samples
+    - The cases are not allowed to influence on each other
+    - This assumption is fulfilled through the research design
+3. Normal distribution of difference scores
+    - The difference variable (here: difference = post scores - pre scores) has to distribute normally. 
+    - This assumption can be tested with the Shapiro-Wilk test
+    - However, the $t$-test is relatively robust against violations and furthermore with large sample sizes the central limit theorem applies. 
+    - look at skew and symmetry (elaborate on this)
+
+
+In the following the assumption of normal distributed difference scores is tested with the `shapiro.test()` function of the `{stats}` package.
+```{r dependent-shapiro}
+# Conduct shapiro wilk test
+dep_shapiro <- shapiro.test(dep_data$post - dep_data$pre)
+
+# Output shapiro wilk test
+dep_shapiro
+```
+The Shapiro-Wilk test resulted in a non-signifikant result, $W$ = `r dep_shapiro$statistic`, $p$ = `r dep_shapiro$p.value`. Hence, the assumption of normality is fulfilled.
+
+
+
 ## Conducting the dependent $t$-test
 
 ## Reporting the dependent $t$-test
