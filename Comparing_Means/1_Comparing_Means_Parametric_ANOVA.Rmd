@@ -176,6 +176,23 @@ As shown in the output the mean weight in the control group is `r mean(filter(da
 
 ### Assessing assumptions of one-way ANOVA
 
+1.  Independent residuals + residuals are independent from another + this assumption is fulfilled via the research design + is for example violated through repeated measures
+2.  Homoskedasticity
+
+```{r indep1-levene-test}
+leveneTest(weight ~ group, data = data_indep1)
+```
+
+3.  Normal distribution of residuals\
+
+    -   As a residuum is the deviation of a measurement from the mean of the condition, measurements have to distribute normally within conditions
+    
+```{r indep1-shapiro-test}
+# Calculate shapiro wilk test for each group
+tapply(data_indep1$weight, data_indep1$group, shapiro.test)
+```
+    
+
 ### One-way ANOVA analysis with `{stats}`
 
 ### One-way ANOVA analysis with `{afex}`
