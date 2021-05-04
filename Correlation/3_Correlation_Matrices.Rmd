@@ -441,3 +441,64 @@ corrplot(cor_mat,
 
 
 ## Network graph for Correlations
+
+Another way to visualize correlations among variables are network graphs. Network graphs are great to visualize large correlation matrices. Of course there are several packages like `{qgraph}` or `{ggraph}`. Here, the function `qgraph()` of the package`{qgraph}` is presented which used the `base R` plotting system. The function takes the correaltion matrix as input and the resulting graph can be written to a file, specifying the argument `filetype` of the `qgraph()` function. 
+
+In network graphs, variables are depicted as nodes (e.g., circles) and the correlations are depicted as edges (e.g., lines). The size of the correlation is represented by the width of the edges. By default, positive correlations are shown in green and negative correlations are shown in red. 
+
+
+```{r network-1}
+# Output simple network graph for correlations
+qgraph(cor_mat, # correlation matrix
+       graph = "cor" # no edges of variable with itself
+)
+```
+
+
+Of course there are a lot of customization options. For example, providing a list specifying which variables group together (argument `groups`) results in colored nodes.
+Here, the variables `Murder`, `Assault` and `Rape` are grouped together as they indicate a crime and the variable `UrbanPop` constitute another group which indicates a sociodemographic characteristic. The list indicates the rows (or the columns) of the correlation matrix (here `cor_mat`) that group together.
+
+```{r network-group}
+# Create list indicating groups in network plot
+arrest_group <- list(Crime = c(1, 2, 4), # 1 = Murder, 2 = Assault, 4 = Rape
+                     SocioDem = 3) # 3 = UrbanPop
+```
+This list is now specified as the `groups` argument. In addition, the argument `threshold = .1` is used, discarding all edges (lines) that represent an absolute correlation below .10 and the layout is altered with the argument `layout`.
+
+```{r network-2}
+# Output a more complex network graph for correlations
+qgraph(cor_mat, # correlation matrix
+       graph = "cor", # no edges of variable with itself
+       groups = arrest_group,
+       layout = "spring", # possible values: circle, groups, spring
+       threshold = .1 # show only edges (lines) with r > |.1|
+)
+```
+
+It is also possible to draw only significant paths specifying the the argument `threshold = "sig"` and providing the sample size with the argument `sampleSize`. However, this is only possible for the pearson correlation but corrections are possible.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
