@@ -23,6 +23,32 @@ As several correlations are calculated and often tested for significance, it is 
 In the following, only the pearson correlation is used, but it is possible for all other correlations too (link to Correlation file). The pearson correlation is the most used correlation coefficient and is consequently supported the most. Therefore, convenient packages are shown as well as calculation *by hand* in a loop (link to loops) in order to obtain results for less supported correlation measures.
 
 # Packages and data
+
+Load the necessary packages:
+```{r packages, message=FALSE}
+library(correlation) # plot of correlations
+library(corrplot) # plots for correlation matrix
+library(kableExtra) # table output
+library(qgraph) # network visualization
+library(RColorBrewer) # color palettes
+library(skimr) # descriptive data analysis
+library(tidyverse) # data wrangling, plotting, etc.
+```
+
+
+Load the data used in this section and output the descriptive statistics.
+```{r data}
+# Load data
+data_arrest <- datasets::USArrests
+
+# Get descriptives of data
+skim(data_arrest)
+```
+
+This datasets contains violent crime rates in the U.S. by state. The values represent the number of people in arrest per 100,000 residents by arrest reason as well as the percentage of the urban population. 
+
+
+
 # Correlation matrix
 ## Correlation matrix using the built-in `{stats}` package
 ## Correlation matrix using the `{correlation}` package
