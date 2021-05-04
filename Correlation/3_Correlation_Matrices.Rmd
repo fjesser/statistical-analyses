@@ -204,6 +204,35 @@ attr(summary_padj_correlation, "p")
 
 
 ## Manual $p$-value adjustment
+
+If the matrix of $p$-values can only be obtained manually (see link to Manual creation of a correlation matrix), a manual adjustment of $p$-values is necessary. At first it is important to select only the unique $p$-values as a correlation matrix involves each correlation twice (lower and upper triangle) as well as the principal diagonal.
+
+```{r p-adj-manual}
+# Get unique p-values
+p_unique <- p_mat[lower.tri(p_mat)] # values are extracted columnwise
+
+# Adjust p-values
+p_adj <- p.adjust(p_unique, 
+             method = "bonferroni")
+
+# Transform values back to matrix form
+# Create empty matrix with NA
+p_mat_adj <- matrix(nrow = nrow(p_mat),
+                    ncol = ncol(p_mat)) 
+# Fill in values in lower triangle
+p_mat_adj[lower.tri(p_mat_adj)] <- p_adj 
+# Fill in values for uppert triangle using transpose for correct ordering
+p_mat_adj[upper.tri(p_mat_adj)] <- t(p_mat_adj)[upper.tri(p_mat_adj)]
+# Set p-values in principal diagonal to 0
+diag(p_mat_adj) <- 0
+
+
+# Output adjusted 
+p_mat_adj
+```
+
+
+
 # Tables
 # Visualization
 ## Symbolic number encoding
