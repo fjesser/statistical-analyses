@@ -177,6 +177,32 @@ For the theory of $p$-value adjustment and which adjustment procedure to choose,
 
 
 ## $p$-value adjustment with the `{correlation}` package
+
+The `correlation()` function of the `{correlation}` package provides several options to adjust the p-values for multiple testing. 
+
+```{r p-adj-correlation-1}
+# Get correlations with corrected p-values
+padj_correlation <- correlation(data_arrest,
+                                p_adjust = "BH") # default
+padj_correlation
+
+# Get summary object of correlations for matrix format
+summary_padj_correlation <- summary(padj_correlation,
+                                    redundant = TRUE) # get full matrix
+
+# Output correlation matrix
+summary_padj_correlation
+```
+You could also output the object `padj_correlation` which will output a tabular format where each row represents a correlation that will show also the adjusted $p$-values. 
+
+For the matrix of adjusted $p$-values, execute the following. 
+
+```{r p-adj-correlation-2}
+# Get matrix of adjusted p-values from correlation package
+attr(summary_padj_correlation, "p")
+```
+
+
 ## Manual $p$-value adjustment
 # Tables
 # Visualization
