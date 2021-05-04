@@ -1,0 +1,25 @@
+---
+title: "Correlation Matrices"
+author: "Felix Eßer"
+date: "4/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+# Packages and data
+# Correlation matrix
+## Correlation matrix using the built-in `{stats}` package
+## Correlation matrix using the `{correlation}` package
+## Manual creation of a correlation matrix
+# $p$-value adjustment
+## $p$-value adjustment with the `{correlation}` package
+## Manual $p$-value adjustment
+# Tables
+# Visualization
+## Symbolic number encoding
+## Correlogram
+## Network graph for Correlations
