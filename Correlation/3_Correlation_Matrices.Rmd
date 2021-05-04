@@ -159,6 +159,23 @@ p_mat
 
 
 # $p$-value adjustment
+
+There are a lot of packages providing $p$-value adjustment, like `{correlation}`, `{TestCor}` or `{psych}`. Here, $p$-value adjustment is shown via the `{correlation}` package as it supports a lot of different correlation measures. Additionally, a manual way of adjusting $p$-values is shown in order to have a versatile and fail-safe approach if an correlation measure of interest is not supported. 
+
+The available adjustment methods for the following presented procedures with the `{correlation}` package and the `p.adjust()` function of the `{stats}` package are:
+
+1. bonferroni
+2. holm
+3. hochberg
+4. hommel
+5. BH or fdr 
+6. BY
+8. somers (only in the `{correlation}` package)
+
+
+For the theory of $p$-value adjustment and which adjustment procedure to choose, have a look at the file `Multiple_Testing` (insert link to multiple testing).
+
+
 ## $p$-value adjustment with the `{correlation}` package
 ## Manual $p$-value adjustment
 # Tables
