@@ -50,7 +50,37 @@ This datasets contains violent crime rates in the U.S. by state. The values repr
 
 
 # Correlation matrix
+
+There are a lot of possibilities and packages to calculate correlation matrices. Here, three approaches are shown:
+
+1. Correlation matrix using the `{stats}` package
+2. Correlation matrix using the `{correlation}` package
+3. Manual creation of a correlation matrix
+
+
 ## Correlation matrix using the built-in `{stats}` package
+
+
+Correlations built upon the covariance of two variables (see link to Correlation file). For completeness, the calculation of a covariance matrix with the `cov()` function of the `{stats}` package is provided too. 
+
+```{r cov-matrix}
+# Calculate and output covariance matrix
+cov(data_arrest)
+```
+
+As easily as calculating covariance matrices, it is possible to create correlation matrices with the `{stats}` package. However, only the pearson, kendall and spearman correlation measures are possible to conduct, specifying the `method` argument. 
+
+```{r cor-matrix-stats}
+# Calculate correlation matrix with stats package
+cor_stats <- cor(data_arrest,
+                 method = "pearson") # default; kendall or spearman possible
+
+# Output correlation matrix
+cor_stats
+```
+
+As can be seen, the correlation matrix does not provide $p$-values in order to assess the significance of the correlation. Logically, other packages have been developed in order to overcome this shortage. 
+
 ## Correlation matrix using the `{correlation}` package
 ## Manual creation of a correlation matrix
 # $p$-value adjustment
