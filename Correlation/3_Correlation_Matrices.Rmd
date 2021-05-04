@@ -327,6 +327,22 @@ output_table
 By aid of the package `{apaTables}` it is possible to output correlation tables in APA format into a word document using the function `apa.cor.table()`. However, as word is not open source and not as easily assimilable into a reproducible research process, it is just mentioned here for people who could be interested in it.
 
 # Visualization
+
+There are a lot of plot possibilities. Visualizations come to shine especially with large correlation matrices.
+
+In addition it is also advisable to look at the univariate and bivariate distributions, see exploratory data analysis (link)
+
 ## Symbolic number encoding
+
+`symnum()` function of the `{stats}` package. 
+
+```{r}
+# correlation matrix
+cor_stats <- cor(data_arrest)
+
+# symnum plot
+symnum(cor_stats) # see argument "cutpoints" and "symbol" for customization
+```
+
 ## Correlogram
 ## Network graph for Correlations
