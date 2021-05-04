@@ -105,6 +105,59 @@ The resulted output shows the correlation matrix with stars, indicating the leve
 
 
 ## Manual creation of a correlation matrix
+
+Although the manual creation of a correlation matrix is more cumbersome, this procedure is sometimes necessary because there is no function available that creates a correlation matrix with corresponding $p$-values. An example is the function `cor.test()` of the built-in `{stats}` package. This function calculates the pearson correlation coefficient and the associated $p$-value but cannot produce a correlation matrix. The function `cor()` of the `{stats}` package can produce a correlation matrix but lacks the calculation of $p$-values. Several packages (e.g., `{correlation}`, `{Hmisc}`) are able to overcome this problem, however, when a rarely used coefficient is needed, the following approach can be used.
+
+In this approach the pearson correlation is calculated between the variables of the `data_arrest` dataset. This happens in the following steps:
+
+1. Subset variables of interest from dataset
+2. Create empty matrices (`NA` values) for correlation coefficients and $p$-values
+3. Run nested loop populating the correlation and $p$-value matrix 
+
+
+```{r cor-matrix-manual}
+# 1. Create dataset only with variables their correlation is of interest ----
+data_arrest <- data_arrest # here no subset necessary; included for completeness
+
+# 2. Create matrix with NA values for correlation coefficients ----
+cor_mat <- matrix(nrow = ncol(data_arrest), # pxp matrix with NA values
+                  ncol = ncol(data_arrest), # p = number of variables in df
+                  dimnames = list(colnames(data_arrest), colnames(data_arrest)))
+# Create matrix with NA values for p-values
+p_mat <- cor_mat
+
+# 3. Nested loop to populate matrix entries ----
+for (i in seq(ncol(data_arrest))) { # first loop over variables
+  for (j in seq(ncol(cor_mat))) { # second loop over variables
+    
+    # Create temporary correaltion coefficient with p-value
+    cor_temp <- cor.test(data_arrest[,i], data_arrest[,j]) 
+    # Extract correlation coefficient and p-value
+    cor_mat[i,j] <- cor_temp$estimate
+    p_mat[i,j] <- cor_temp$p.value
+    
+  }
+}
+```
+
+Depending on the correlation function of interest, the content of the nested loop has to be altered. 
+
+The correlation coefficients are stored in the object `cor_mat`.
+
+```{r cor-matrix-manual-cor}
+# Output correlation matrix
+cor_mat
+```
+
+The corresponding $p$-values are stored in the object `p_mat`. These $p$-values are not adjusted. See section $p$-value adjustment (insert link).
+
+```{r cor-matrix-manual-p}
+# Output of corresponding p-values
+p_mat
+```
+
+
+
 # $p$-value adjustment
 ## $p$-value adjustment with the `{correlation}` package
 ## Manual $p$-value adjustment
