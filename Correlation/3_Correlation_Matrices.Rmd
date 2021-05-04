@@ -345,4 +345,99 @@ symnum(cor_stats) # see argument "cutpoints" and "symbol" for customization
 ```
 
 ## Correlogram
+
+Using the `{corrplot}` package. Uses the `base R` plotting system. There is also a similar package called `{ggcorrplot}` using `{ggplot2}` as a plotting system, however, this package has a lot of less customization options. 
+
+In total, there are seven visualization methods: 
+1. circle (default)
+2. square
+3. ellipse
+4. number
+5. pie
+6. shade
+7. color
+
+At first, the default output of the `corrplot()` function is presented.
+```{r correlogram-default}
+# correlation matrix
+cor_stats <- cor(data_arrest)
+
+# Correlogram with circles
+# if matrix is calculated manually add "is.corr = FALSE" 
+cor_circle_plot <- corrplot(cor_stats) 
+```
+The size of the circles as well as their color represent the size of the correlation. 
+
+There are a lot of customization options to change the appearance of the plot. Take a look in the documentation. Beside other customization options, the following plot orders the correlations based on an algorithm. This is especially useful for large correlation matrices to detect correlation patterns. The following algorithms can be used:
+1. original (none)
+2. AOE (angular order of the eigenvectors)
+3. FPC (first principal component order)
+4. hclust (hierarchical clustering order)
+    + There are 9 different agglomeration methods for the hclust method. See the documentation for details.
+    + Along with this method, rectangles can be drawn according the the hierarchical clustering. Specify the argument `addrect`
+5. alphabet
+
+The next code calculates the new plot using a bunch of, but not all (!), customization options.
+
+At first a color palette is defined using the `colorRampPalette()` function of the built-in `{grDevices}` package. It is also possible to use the built-in color palettes of the `{grDevice}` package: `cm.colors()`, `topo.colors()`, `terrain.colors()`, `heat.colors()` or `rainbow()`, which all take an integer as argument.
+
+```{r correlogram-customized}
+# Create own color spectrum
+#color_spectrum <- color
+
+# Create customized correlogram
+corrplot(cor_stats, # if matrix is calculated manually add "is.corr = FALSE" 
+         # General corrplot settings
+         method = "color", # visualization method
+         addgrid.col = FALSE, # remove grid
+         type = "lower", # only lower triangle with main diagonale
+                          # this doesn't work with addrect != NULL
+         diag = TRUE, # default: T; display of principal diagonal
+         bg = "white", # default: "white"; used if method = "number"
+         col = brewer.pal(8, "RdBu"),  # color palette from RcolorBrewer
+         addCoef.col = "black", # add coefficient (number) in black 
+         
+         # Clustering
+         order = "hclust",
+         hclust.method = "complete",
+         addrect = 2, # add n rectangles representing the clustering
+         rect.col = "skyblue", # color of rectangles
+         rect.lwd = 2, # line width of rectangles
+         
+         # Text labels
+         tl.pos = "lt", # default; add text left and top
+         tl.srt = 0, # no rotation of upper text (0 degrees)
+         tl.col = "black", # color of text labels
+         tl.offset = 1, # space between text labels and matrix
+         
+         # Color legend
+         cl.pos = "r", # default: "r"; n = none
+         #cl.lim = c(-1,1), # default; limits of color label
+
+         )
+```
+
+
+It is also possible to create mixed correlograms using two visualization methods:
+
+```{r correlogram-mixed}
+corrplot.mixed(cor_mat,
+               lower = "ellipse", # visualization method for lower triangle
+               upper = "pie" # visualization method for upper triangle
+)
+```
+
+
+
+It is also possible to include the $p$-values. This can be accomplished by specifying the `p.mat` argument which takes the matrix of (adjusted) $p$-values corresponding to the correlations. There are a lot of possibilities to visualize the information of the $p$-values. For example, stars can be drawn or insiginificant correlations are crossed. In the following plot, insignificant correlations have a blank field, specifying the `sig.level` argument as well as the `insig` argument. 
+
+```{r correlogram-p-values}
+corrplot(cor_mat,
+         p.mat = p_mat,
+         sig.level = 0.05, # default: 0.05; can be vector if insig = "label_sig"
+         insig = "blank"
+)
+```
+
+
 ## Network graph for Correlations
