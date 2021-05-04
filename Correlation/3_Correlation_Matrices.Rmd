@@ -234,6 +234,98 @@ p_mat_adj
 
 
 # Tables
+
+Outputting publication ready correlation tables is not that easy in `R` because assigning stars indicating the significance of a correlation coefficient is not supported by any package for all possible correlation measures. Therefore, the following code shows a versatile approach to produce correlation tables for any given correlation matrix. This is accomplished by means of the package `{kableExtra}`
+
+```{r cor-table}
+# 1. Data Managing ----
+# Save correlations as matrix in separate object
+# if manually calculated correlation matrix is used: cor_table <- cor_mat
+cor_table <- summary_correlation[, -1] %>% # discard 1. column (Parameter)
+  as.matrix() # save as matrix
+
+# Save p-values as matrix in separate object
+# Extracting p-values from {correlation} object via attribute
+# if manually calculated p-values are used: p_table <- p_mat
+p_table <- attr(summary_correlation, "p")[, -1] # discard 1. column (Parameter)
+
+
+# 2. Create correlation table with significance stars ----
+# on the basis of matrices
+cor_table <- format(cor_table, digits = 2) # round and change to character class
+
+# Set * for .01 > p <= .05
+cor_table[p_table > .01 & p_table <= .05] <- 
+  paste0(cor_table[p_table > .01 & p_table <= .05], "*")
+# Set ** for .001 > p <= .01
+cor_table[p_table > .001 & p_table <= .01] <- 
+  paste0(cor_table[p_table > .001 & p_table <= .01], "**")
+# Set *** for p <= .001
+cor_table[p_table <= .001] <- paste0(cor_table[p_table <= .001], "***")
+
+# Format table
+# Set em-dash in diagonal
+diag(cor_table) <- "---" # 1, SD, alpha, etc. also possible
+# Set empty string in upper triangle
+cor_table[upper.tri(cor_table)]  <- "" # second sample cor. also possible
+# Remove zero before ".xx"
+cor_table <- gsub("^0", "", cor_table)
+
+# Rename rownames and columnnames (can also respecifed in kbl() below)
+rownames(cor_table) <- colnames(cor_table)
+colnames(cor_table) <- 1:ncol(cor_table)
+
+
+# 3. Create full table with means and sd as 1. and 2. column ----
+# if you don't want these columns, remove them at the end
+# Calculate mean and sd
+descriptives <- cbind(Mean = apply(data_arrest, 2, mean, na.rm = TRUE),
+                      SD = apply(data_arrest, 2, sd, na.rm = TRUE))
+
+# Transform into character
+descriptives <- format(descriptives, digits = 2,
+                       nsmall = 2) # minimum number of digits after decimal
+
+# Merge descriptives with cor_table into full_table
+full_table <- merge(descriptives, cor_table, by = "row.names", sort = FALSE)
+# Order full_table according to cor_table (respects different ordering to desc.)
+full_table <- full_table[match(rownames(cor_table), full_table$Row.names), ]
+
+# Rename "Row.names" column to "Variable"
+names(full_table)[1] <- "Variable" # Row.names added by merge()
+
+# Add "1. " etc. in front of variable names actual rownames from "1" to "1."
+full_table$Variable <- paste0(1:nrow(full_table), # row numbers
+                              "\\. ", # \\ to get correct alignment in knitr
+                                      # escape interpretation as numbered list
+                              full_table$Variable)
+
+# Change font of header columns "Mean" and "SD" to italic (kableExtra function)
+names(full_table)[2:3] <- cell_spec(names(full_table)[2:3], italic = TRUE)
+
+
+# 4. Create output table ----
+# Create footnote in html-style
+footnote_html <- paste("  * <i>p</i> < .05, ** <i>p</i> < .01, *** <i>p</i> < .001; <i>N</i> =", nrow(data_arrest))
+#Create output table
+output_table <- 
+  full_table %>% 
+  kbl(escape = FALSE) %>% # in order that cell_spec() specification works
+  kable_classic(full_width = TRUE) %>% # default: T
+  footnote(general_title = "Note: ",
+           footnote_as_chunk = TRUE, # no linebreak after "Note:"
+           general = footnote_html,
+           escape = FALSE) # in order that html markup can be used
+
+
+# 5. Output output table
+# If pairwise deletion is used add another column (n) as second 
+output_table
+
+```
+
+By aid of the package `{apaTables}` it is possible to output correlation tables in APA format into a word document using the function `apa.cor.table()`. However, as word is not open source and not as easily assimilable into a reproducible research process, it is just mentioned here for people who could be interested in it.
+
 # Visualization
 ## Symbolic number encoding
 ## Correlogram
