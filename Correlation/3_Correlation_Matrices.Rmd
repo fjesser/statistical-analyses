@@ -82,6 +82,28 @@ cor_stats
 As can be seen, the correlation matrix does not provide $p$-values in order to assess the significance of the correlation. Logically, other packages have been developed in order to overcome this shortage. 
 
 ## Correlation matrix using the `{correlation}` package
+
+The `correlation()` function of the `{correlation}` package provides several correlation measures, specified by the `method` argument (see also link to Correlation file).
+
+```{r cor-matrix-correlation}
+# Calculate correlations with correlation package
+cor_correlation <- correlation(data_arrest,
+                               method = "pearson", # default: pearson
+                               p_adjust = "none") # default: holm
+
+# Get full correlation as matrix
+summary_correlation <- summary(cor_correlation,
+                               redundant = TRUE) # default: false, get matrix 
+                                                 # instead of long data form
+
+# Output full correlation matrix
+summary_correlation
+
+```
+
+The resulted output shows the correlation matrix with stars, indicating the level on which the correlation is significant.
+
+
 ## Manual creation of a correlation matrix
 # $p$-value adjustment
 ## $p$-value adjustment with the `{correlation}` package
