@@ -233,7 +233,7 @@ p_mat_adj
 
 
 
-# Tables
+An# Tables
 
 Outputting publication ready correlation tables is not that easy in `R` because assigning stars indicating the significance of a correlation coefficient is not supported by any package for all possible correlation measures. Therefore, the following code shows a versatile approach to produce correlation tables for any given correlation matrix. This is accomplished by means of the package `{kableExtra}`
 
@@ -270,6 +270,7 @@ diag(cor_table) <- "---" # 1, SD, alpha, etc. also possible
 cor_table[upper.tri(cor_table)]  <- "" # second sample cor. also possible
 # Remove zero before ".xx"
 cor_table <- gsub("^0", "", cor_table)
+cor_table <- gsub("^-0", "-", cor_table)
 
 # Rename rownames and columnnames (can also respecifed in kbl() below)
 rownames(cor_table) <- colnames(cor_table)
