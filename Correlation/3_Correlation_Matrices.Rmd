@@ -233,7 +233,7 @@ p_mat_adj
 
 
 
-An# Tables
+# Tables
 
 Outputting publication ready correlation tables is not that easy in `R` because assigning stars indicating the significance of a correlation coefficient is not supported by any package for all possible correlation measures. Therefore, the following code shows a versatile approach to produce correlation tables for any given correlation matrix. This is accomplished by means of the package `{kableExtra}`
 
@@ -319,7 +319,7 @@ output_table <-
            escape = FALSE) # in order that html markup can be used
 
 
-# 5. Output output table
+# 5. Output output table ----
 # If pairwise deletion is used add another column (n) as second 
 output_table
 
@@ -337,7 +337,7 @@ In addition it is also advisable to look at the univariate and bivariate distrib
 
 `symnum()` function of the `{stats}` package. 
 
-```{r}
+```{r sym-enc}
 # correlation matrix
 cor_stats <- cor(data_arrest)
 
