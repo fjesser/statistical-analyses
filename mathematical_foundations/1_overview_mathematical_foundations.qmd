@@ -1,0 +1,30 @@
+---
+title: "Overview of Mathematical Foundations"
+author: "Felix Eßer"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+      toc: true
+      toc_float: true
+      number_sections: true
+bibliography: '`r file.path(gsub("(?<=Statistical_Analyses).*", "", getwd(), perl = TRUE), "bibliography.bib")`'
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+"Mathematics is first and foremost the study of how to use numbers." [@Kropko2016, p. 2]
+
+
+To perform statistical analyses, one must apply and use mathematics. Therefore, a solid knowledge of mathematical foundations is important in order to understand statistical methods. In this section, *Mathematical Foundations*, all necessary foundations are summarized. The structure of this section is divided according to the [Dewey Decimal Classification (DDC)](https://en.wikipedia.org/wiki/List_of_Dewey_Decimal_classes#Class_500_%E2%80%93_Science) [@OCLC2011] for mathematics. The DDC is a library classification system in which mathematics is assigned the class 510. Within this class, the subdisciplines of mathematics are specified^[The reader should not be left unaware of the fact that there are different ways to classify the subdisciplines/branches/areas of mathematics. For an additional view see @Gowers2008.]. For the purposes of this section, only the necessary subdisciplines are included. They are:
+
+1. Arithmetic
+2. Algebra
+3. Analysis
+4. Probability
+
+
+# References
