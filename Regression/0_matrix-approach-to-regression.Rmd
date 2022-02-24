@@ -1,0 +1,24 @@
+---
+title: "Matrix Approach to Regression"
+author: "Felix J. Esser"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+      toc: true
+      toc_float: true
+      number_sections: true
+bibliography: '`r file.path(gsub("(?<=Statistical_Analyses).*", "", getwd(), perl = TRUE), "bibliography.bib")`'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+- primarily mathematical description of matrix approach to (multiple) regression
+- based on linear algebra (link to linear algebra)
+- good to know to understand regression in another way and also to understand other, more complicated procedures that build up on this 
+
+# Unstandardized Multiple Regression in Matrix Form
+
