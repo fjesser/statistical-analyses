@@ -87,10 +87,68 @@ $\mathbf{b} = (\mathbf{X'X})^{-1} \mathbf{X'y} = \begin{bmatrix}n & \sum x_{1i} 
 
 
 ## Sum of Squares and ANOVA Summary Table
+
+The total sum of squares can be decomposed into the regression/model sum of squares and the error/residual sum of squares:
+$$SS_{Total} = SS_{Regression} + SS_{Residual}$$
+It is important to get the residual sum of squares and their degree of freedoms in order to estimate the [standard errors of the regression coefficients](#se). In addition it is possible to create an ANOVA summary table based on the sum of squares.
+
+Add
+- MS = SS/df
+- dfs also sum up
+- but MS don't sum up
+
+
 ### Total Sum of Squares
+The total sum of squares represent the variability in $\mathbf{y}$ that is available:
+$$SS_{Total} = \mathbf{y_c'y_c} = \mathbf{(y - \bar{y})' (y - \bar{y})} = \sum_{i=1}^{n} (y_i - \bar{y})^2$$
+The corresponding degrees of freedom of the total sum of squares are:
+$$df_{Total} = n -1$$
+
+Dividing the total sum of squares by the total degrees of freedom results in the total mean squares. The total mean squares are equal to the variance of $\mathbf{y}$:
+$$MS_{Total} = \frac{SS_{Total}}{df_{Total}} = \frac{\sum_{i=1}^{n} (y_i - \bar{y})^2}{n-1} = \hat{\sigma}_y^2$$
+
 ### Regression Sum of Squares
+The regression sum of squares represent the variability that could be explained by the linear regression. The regression sum of squares are based on the fitted values $\mathbf{\hat{y}}$:
+$$\mathbf{\hat{y}} = \mathbf{X b}$$
+Before using these fitted values, they must be centered so that the variability is correct. This is the same as in the calculation of the total sum of squares where the mean is subtracted from every value before squaring them and summing them up. The centered fitted values are:
+$$\mathbf{\hat{y}_C} = \mathbf{\hat{y}} - \mathbf{\bar{y}} = \begin{bmatrix}\hat{y}_1 \\ \vdots \\ \hat{y}_n \end{bmatrix} \begin{bmatrix}\bar{y}\\ \vdots \\ \bar{y} \end{bmatrix} = \begin{bmatrix}\hat{y}_{c1} \\ \vdots \\ \hat{y}_{cn} \end{bmatrix}$$
+Now, the regression sum of squares can be calculated:
+$$SS_{Regression} = \mathbf{\hat{Y}_C' \hat{Y}_C} = \begin{bmatrix}\hat{y}_{c1} & \ldots & \hat{y}_{cn} \end{bmatrix} \begin{bmatrix}\hat{y}_{c1} \\ \vdots \\ \hat{y}_{cn}\end{bmatrix} = \sum_{i=1}^{n} y_{ci}^2 = \sum_{i=1}^{n} (\hat{y}_i-\bar{y})^2$$
+
+The corresponding degrees of freedom are the number of predictors (regression coefficients that represent slopes):
+$$df_{Regression} = p$$
+
+The regression mean squares are:
+$$MS_{Regression} = \frac{SS_{Regression}}{df_{Regression}} = \frac{\sum_{i=1}^{n} (\hat{y}_i-\bar{y})^2}{p}$$
+
+
 ### Residual Sum of Squares
+The residual sum of squares represent the variability that could not be explained. First, the residual vector has to be calculated:
+$$\mathbf{e} = \mathbf{Y} - \mathbf{\hat{Y}} = \begin{bmatrix}y_1 \\ \vdots \\ y_n \end{bmatrix} - \begin{bmatrix} \hat{y}_1 \\ \vdots \\ \hat{y}_n \end{bmatrix} = \begin{bmatrix}e_1 \\ \vdots \\ e_n \end{bmatrix}$$
+
+Based on the residual vector the residual sum of squares can be calculated:
+$$SS_{Residual} = \mathbf{e'e} = \begin{bmatrix}e_1 & \ldots & e_n \end{bmatrix} \begin{bmatrix}e_1 \\ \vdots \\ e_n \end{bmatrix} = \sum_{i=1}^n e_i^2$$
+
+The corresponding degrees of freedom are:
+$$df_{Residual} = n-p-1$$
+
+The mean residual squares which is also called the conditional variance and mean squared error:
+$$MS_{Residual} = \frac{SS_{Residual}}{df_{Residual}} = \frac{\sum_{i=1}^n e_i^2}{n-p-1} = MSE = \hat{\sigma}_e^2$$
+
+
 ### ANOVA Summary Table
+
+: ANOVA Summary Table
+
+| Source        | SS               | df               | MS              | F              | p        |
+|---------------|:----------------:|:----------------:|:---------------:|:--------------:|:--------:|
+| **Regression**| $SS_{Regression}$| $df_{Regression}$|$MS_{Regression}$|$F= \frac{MS_{Regression}}{MS_{Residual}}$|  |
+| **Residual**  | $SS_{Residual}$  | $df_{Residual}$  |$MS_{Residual}$  |                |          |
+| **Total**     | $SS_{Total}$     | $df_{Total}$     |                 |                |          |
+
+
+
+
 ## Standard Errors of the Regression coefficients {#se}
 ## Significance Tests and Confidence Intervals
 # Standardized Multiple Regression in Matrix Form
