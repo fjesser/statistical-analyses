@@ -16,9 +16,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-- primarily mathematical description of matrix approach to (multiple) regression
-- based on linear algebra (link to linear algebra)
-- good to know to understand regression in another way and also to understand other, more complicated procedures that build up on this 
+This text is primarily a mathematical description of the matrix approach to multiple linear regression. It provides a deeper understanding into regression as well as linear algebra (link both). This deeper understanding is valuable in order to understand other, more complicated procedures that build up on multiple linear regression.
 
 # Unstandardized Multiple Regression in Matrix Form
 
+## Deriving $\mathbf{b}$
+## Sum of Squares and ANOVA Summary Table
+### Total Sum of Squares
+### Regression Sum of Squares
+### Residual Sum of Squares
+### ANOVA Summary Table
+## Standard Errors of the Regression coefficients {#se}
+## Significance Tests and Confidence Intervals
+# Standardized Multiple Regression in Matrix Form
+# Uncorrelated predictors
+# Calculation Shortcuts
