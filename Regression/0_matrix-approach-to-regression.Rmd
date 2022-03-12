@@ -50,6 +50,42 @@ $$\mathbf{\hat{y}}_{n\times 1}  = \mathbf{X}_{n\times (p+1)}  \mathbf{b}_{p\time
 
 
 ## Deriving $\mathbf{b}$
+The regression coefficients in $\mathbf{b}$ are defined in order that the error/residual terms fullfill the least squares criterion, which is:
+$$\sum_{i=1}^{n} e_i^2 = \mathbf{e'e} = min$$
+This means the folllowing:
+$$\begin{array}{ccl}
+\mathbf{e'e} &= &(\mathbf{y} - \mathbf{\hat{y}})'(\mathbf{y} - \mathbf{\hat{y}})\\
+&=& (\mathbf{y}-\mathbf{Xb})' (\mathbf{y}-\mathbf{Xb})\\
+&=& \mathbf{y'y} - 2\mathbf{b'X'y} + \mathbf{b'X'Xb} = min
+\end{array}$$
+
+Differentiating $\mathbf{e'e}$ with respect to the unknown vector $\mathbf{b}$ (link to calculus or similar topic):
+$$\frac{d}{d\mathbf{b}} = 2\mathbf{X'Xb}-2\mathbf{X'y}$$
+Setting the obtained first derivative to 0 and solve for the desired and unknown vector $\mathbf{b}$:
+$$\begin{array}{rcl}
+2\mathbf{X'Xb}-2\mathbf{X'y}&=&0\\
+2\mathbf{X'Xb}&=&2\mathbf{X'y}\\
+\mathbf{X'Xb}&=&\mathbf{X'y}\\
+\mathbf{X'X}^{-1}\mathbf{X'Xb} &= &\mathbf{X'X}^{-1}\mathbf{X'y}\\
+\mathbf{b} &=& \mathbf{X'X}^{-1}\mathbf{X'y}
+\end{array}$$
+
+The last equation is really important and the heart of this document since it is the previous unknown vector of regression coefficients.
+
+Compare this result, $\mathbf{b} = \mathbf{X'X}^{-1}\mathbf{X'y}$, with the calculation of the slope in the bivariate case and see the similarity: $b =\frac{\sum_{i=1}^{n}x_i y_i}{\sum_{i=1}^n x_i^2} = (\sum_{i=1}^n x_i^2)^{-1}\sum_{i=1}^{n}x_i y_i$
+
+
+
+In the following the matrices involved in getting $\mathbf{b}$ are shown in more detail:
+
+$\mathbf{X'X}_{(p+1)\times (p+1)} = \begin{bmatrix}1 & \ldots& 1\\x_{11}&\ldots& x_{1n}\\x_{21}&\ldots&x_{2n} \end{bmatrix}_{(p+1)\times n} \begin{bmatrix}1 & x_{11} & x_{21}\\ \vdots & \vdots & \vdots \\ 1 & x_{1n} & x_{2n} \end{bmatrix}_{n\times (p+1)} = \begin{bmatrix}n & \sum x_{1i} & \sum x_{2i}\\ \sum x_{1i} & \sum x_{1i}^2 & \sum x_{1i}x_{2i}\\ \sum x_{2i} & \sum x_{2i} x_{1i} & \sum x_{2i}^2 \end{bmatrix}$
+
+$\mathbf{X'y} = \begin{bmatrix}1 & \ldots& 1\\x_{11}&\ldots& x_{1n}\\x_{21}&\ldots&x_{2n} \end{bmatrix} \begin{bmatrix}y_1\\ \vdots \\ y_n \end{bmatrix} = \begin{bmatrix} \sum y_i \\ \sum x_{1i} y_i \\ \sum x_{2i} y_i \end{bmatrix}$
+
+$\mathbf{b} = (\mathbf{X'X})^{-1} \mathbf{X'y} = \begin{bmatrix}n & \sum x_{1i} & \sum x_{2i}\\ \sum x_{1i} & \sum x_{1i}^2 & \sum x_{1i}x_{2i}\\ \sum x_{2i} & \sum x_{2i} x_{1i} & \sum x_{2i}^2 \end{bmatrix} \begin{bmatrix} \sum y_i \\ \sum x_{1i} y_i \\ \sum x_{2i} y_i \end{bmatrix} = \begin{bmatrix}n \sum y_i + \sum x_{1i} \sum x_{1i} y_i + \sum x_{2i}\sum x_{2i}y_i\\ \sum x_{1i}\sum y_i + \sum x_{1i}^2\sum x_{1i}y_i + \sum x_{1i}x_{2i}\sum x_{2i}y_i\\ \sum x_{2i}\sum y_i + \sum x_{2i}x_{1i}\sum x_{1i}y_i+ \sum x_{2i}^2\sum x_{2i}y_i \end{bmatrix} = \begin{bmatrix} b_0\\b_1\\b_2 \end{bmatrix}$
+
+
+
 ## Sum of Squares and ANOVA Summary Table
 ### Total Sum of Squares
 ### Regression Sum of Squares
