@@ -1,0 +1,19 @@
+---
+title: 
+author: "Felix Eßer"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+      toc: true
+      toc_float: true
+      number_sections: true
+bibliography: '`r file.path(gsub("(?<=Statistical_Analyses).*", "", getwd(), perl = TRUE), "bibliography.bib")`'
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+# References
