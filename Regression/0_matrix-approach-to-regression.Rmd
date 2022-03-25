@@ -184,6 +184,14 @@ $$SE(\mathbf{b}) = \sqrt{diag(Var(\mathbf{b}))}$$
 
 
 ## Significance Tests and Confidence Intervals
-# Standardized Multiple Regression in Matrix Form
+
+Based on the standard errors, calculate t value for estimate. Get critical value
+and boom 
+$$t = \frac{b_j}{SE(b_j)}$$
+
+95% Confidence intervals for $b$: 
+$$95\% CI = b_j \pm t_{crit} SE(b_j)$$
+where $t_{crit}$ is the critical t value with $df_t = df_{Residual} = n-p-1$
+
 # Uncorrelated predictors
 # Calculation Shortcuts
