@@ -42,11 +42,11 @@ makes in total $N$ equations.
 All of these equations can be compactly written in matrix notation. The
 representation in matrix form is then (link to Linear Algebra): 
 $$\begin{array}{ccccccc}
-&\mathbf{y}_{n\times 1} & = &\mathbf{X}_{n\times (p+1)} & \mathbf{b}_{p\times 1} & + & \mathbf{e}_{n\times 1}\\
+&\mathbf{y}_{n\times 1} & = &\mathbf{X}_{n\times (p+1)} & \mathbf{b}_{(p+1)\times 1} & + & \mathbf{e}_{n\times 1}\\
 =&\begin{bmatrix}y_1\\ \vdots \\ y_i \\ \vdots \\ y_n \end{bmatrix} & = & \begin{bmatrix}1 & x_{11} & \cdots & x_{j1} & \cdots & x_{p1}\\ \vdots & \vdots &  & \vdots &  & \vdots \\ 1 & x_{1n} & \cdots & x_{ji} & \cdots & x_{pi}\\ \vdots & \vdots &  & \vdots &  & \vdots \\ 1 & x_{1n} & \cdots & x_{jn} & \cdots & x_{pn} \end{bmatrix} & \begin{bmatrix}b_0\\b_1\\ \vdots \\ b_j \\ \vdots \\ b_p \end{bmatrix} & + & \begin{bmatrix}e_1\\ \vdots \\ e_i \\ \vdots \\ e_n \end{bmatrix}\end{array}$$
 
 where $\mathbf{y}$ is the outcome vector of $n$ outcome values, $\mathbf{X}$ is the design matrix containing the constant as first column (important for intercept) and the $p$ predictor values for all $n$ cases, $\mathbf{b}$ is the coefficient vector, and $\mathbf{e}$ is the vector of errors/residuals. The equation of the predicted outcome values $\mathbf{\hat{y}}$ does not contain the residual term $\mathbf{e}$:
-$$\mathbf{\hat{y}}_{n\times 1}  = \mathbf{X}_{n\times (p+1)}  \mathbf{b}_{p\times 1}$$
+$$\mathbf{\hat{y}}_{n\times 1}  = \mathbf{X}_{n\times (p+1)}  \mathbf{b}_{(p+1)\times 1}$$
 
 
 ## Deriving $\mathbf{b}$
@@ -60,19 +60,19 @@ $$\begin{array}{ccl}
 \end{array}$$
 
 Differentiating $\mathbf{e'e}$ with respect to the unknown vector $\mathbf{b}$ (link to calculus or similar topic):
-$$\frac{d}{d\mathbf{b}} = 2\mathbf{X'Xb}-2\mathbf{X'y}$$
+$$\frac{d \mathbf{e'e}}{d\mathbf{b}} = 2\mathbf{X'Xb}-2\mathbf{X'y}$$
 Setting the obtained first derivative to 0 and solve for the desired and unknown vector $\mathbf{b}$:
 $$\begin{array}{rcl}
 2\mathbf{X'Xb}-2\mathbf{X'y}&=&0\\
 2\mathbf{X'Xb}&=&2\mathbf{X'y}\\
 \mathbf{X'Xb}&=&\mathbf{X'y}\\
-\mathbf{X'X}^{-1}\mathbf{X'Xb} &= &\mathbf{X'X}^{-1}\mathbf{X'y}\\
-\mathbf{b} &=& \mathbf{X'X}^{-1}\mathbf{X'y}
+(\mathbf{X'X})^{-1}\mathbf{X'Xb} &= &(\mathbf{X'X})^{-1}\mathbf{X'y}\\
+\mathbf{b} &=& (\mathbf{X'X})^{-1}\mathbf{X'y}
 \end{array}$$
 
 The last equation is really important and the heart of this document since it is the previous unknown vector of regression coefficients.
 
-Compare this result, $\mathbf{b} = \mathbf{X'X}^{-1}\mathbf{X'y}$, with the calculation of the slope in the bivariate case and see the similarity: $b =\frac{\sum_{i=1}^{n}x_i y_i}{\sum_{i=1}^n x_i^2} = (\sum_{i=1}^n x_i^2)^{-1}\sum_{i=1}^{n}x_i y_i$
+Compare this result, $\mathbf{b} = (\mathbf{X'X})^{-1}\mathbf{X'y}$, with the calculation of the slope in the bivariate case and see the similarity: $b =\frac{\sum_{i=1}^{n}x_i y_i}{\sum_{i=1}^n x_i^2} = (\sum_{i=1}^n x_i^2)^{-1}\sum_{i=1}^{n}x_i y_i$
 
 
 
