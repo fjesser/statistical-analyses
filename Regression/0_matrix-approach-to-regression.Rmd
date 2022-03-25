@@ -162,6 +162,27 @@ $$R^2 = \frac{SS_{Regression}}{SS_{Total}}$$
 
 
 ## Standard Errors of the Regression coefficients {#se}
+
+Add how to come to the next equation:
+
+Using the mean squared error, $\hat{\sigma}_e^2 = MS_{Residual} = \frac{SS_{Residual}}{df_{Residual}}$, it is possible to derive the covariance matrix of the coefficients:
+$$Var(\mathbf{b})_{(p+1)\times (p+1)} = 
+\hat{\sigma}^2_e \mathbf{(X'X)}^{-1} = 
+\begin{bmatrix}\sigma^2_{b0}&\cdots &&&\\ \vdots & \ddots & & &\\ \vdots & \cdots & \sigma^2_{bj} & \cdots & \vdots \\ \vdots & & & \ddots & \vdots \\ \cdots & \cdots & \cdots & \cdots & \sigma^2_{bp} \end{bmatrix}$$
+
+Since the mean squared error is only one value, the assumption of homoskedasticity is necessary to provide the same accuracy of a fitted value for every predictor combination. 
+
+Add that in the [standardized regression](#std-reg) the diagonal elements of $Var(\mathbf{b})$ are the variance inflation factors.
+
+The diagonal elements are the squared standard error of the coefficients.  Therefore, the standard error of the regression coefficient for the intercept is the square root of the first element (first row, first column) of the $Var(\mathbf{b})$ matrix:
+$$SE(b_0) = \sqrt{Var(\mathbf{b})_{11}}$$
+Similarly, the square root of the element in the second row and second column of $Var(\mathbf{b})$ is the standard error of the regression coefficient of the first predictor:
+$$SE(b_1) = \sqrt{Var(\mathbf{b})_{22}}$$
+
+In general, taking the square root of all diagonal elements results in a vector of standard errors:
+$$SE(\mathbf{b}) = \sqrt{diag(Var(\mathbf{b}))}$$
+
+
 ## Significance Tests and Confidence Intervals
 # Standardized Multiple Regression in Matrix Form
 # Uncorrelated predictors
