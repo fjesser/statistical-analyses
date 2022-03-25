@@ -267,3 +267,22 @@ If uncorrelated, beta hat is equal to $\mathbf{r}_{xy}$ which means the estimate
 
 
 # Calculation Shortcuts
+
+
+Uncorrected regression sum of squares
+(see also calculation rule for the transpose of the product, link to linear algebra)
+$$\begin{array}{ccl}
+SS_{uReg} &=& \mathbf{\hat{y}'\hat{y}}\\
+&=&(\mathbf{Xb})'\mathbf{Xb}\\
+&=&\mathbf{b'X'Xb}\\
+&=&\mathbf{b'X'X(X'X)^{-1}X'y}
+&=& \mathbf{b'X'y}
+\end{array}$$
+
+
+$\mathbf{\hat{y}'\hat{y}}$ involves squaring $n$ numbers.
+$\mathbf{b'X'y}$ involves multiplying $p+1$ pairs 
+
+Get corrected regression sum of squares
+$SS_{Regression} = SS_{uReg} - n\bar{y}^2$
+
