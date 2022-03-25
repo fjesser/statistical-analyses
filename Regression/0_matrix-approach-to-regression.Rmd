@@ -259,4 +259,11 @@ Other anova still applies but here it is a bit special. connection to R^2
 | **Total**     | $1$     | $df_{Total}$     |                 |                |          |
 
 # Uncorrelated predictors
+
+$\mathbf{R}_{xx}$ is a identity matrix and the inverse is obviously also an identity matrix
+
+If uncorrelated, beta hat is equal to $\mathbf{r}_{xy}$ which means the estimates are equal to the bivariate correlations between predictors and criterion/outcome
+
+
+
 # Calculation Shortcuts
