@@ -9,3 +9,63 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Introduction
+
+
+# Multicollinearity
+
+Problem
+- high multicollinearity means ... (not only high bivariate correlations between predictors)
+
+Detection
+- Variance inflation factor
+
+Solution
+1) Drop variables
+2) Combine highly correlated variables
+3) PCA or factor analysis
+4) factor regression
+
+# Linearity
+
+Problem
+- 
+
+Detection
+- Plot y vs. each X (link to visualization)
+- Fit polynomials 
+
+Solution
+- Fit polynomials
+- transform x and/or y
+- nonlinear regression
+- GLM (link to glm)
+
+# Outliers
+
+Problem
+- 
+
+Detection
+- 
+
+Solution
+- Remove data if error
+- Robust regression
+- mixture models (cluster of outliers)
+- sometimes transformation helps
+
+# Homoskedasticity
+
+Problem
+- often true when X is a count
+
+Detection
+- 
+
+Solution
+- transform Y
+- weighted regression
+- count regression (glm)
+
+
