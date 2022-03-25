@@ -193,5 +193,70 @@ $$t = \frac{b_j}{SE(b_j)}$$
 $$95\% CI = b_j \pm t_{crit} SE(b_j)$$
 where $t_{crit}$ is the critical t value with $df_t = df_{Residual} = n-p-1$
 
+
+# Standardized Multiple Regression in Matrix Form {#std-reg}
+
+z values
+possible to compare influences between predictors because same metric
+
+Let $\mathbf{R}_{xx}$ be the symmetric $p\times p$ correlation matrix between
+the $j = 1, \ldots, p$ $\mathbf{x}$ variables:
+$$\mathbf{R}_{\mathbf{xx}} = 
+\begin{bmatrix} 
+1 & r_{\mathbf{x}_1\mathbf{x}_2} & \cdots & & & \cdots &r_{\mathbf{x}_1\mathbf{x}_p}\\
+r_{\mathbf{x}_2\mathbf{x}_1} & 1 & & & & &\\
+\vdots & & \ddots & & & & \vdots \\
+r_{\mathbf{x}_j\mathbf{x}_1} & & &1 & & & r_{\mathbf{x}_p\mathbf{x}_j}\\
+\vdots & & & & & \ddots & \vdots \\
+r_{\mathbf{x}_p\mathbf{x}_1} & & \cdots & & & \cdots & 1
+\end{bmatrix}$$
+
+
+
+
+Let $\mathbf{r}_{\mathbf{xy}}$ be the $p\times 1$ vector of the correlations of $p$ $\mathbf{x}$
+variables with $\mathbf{y}$:
+$$\mathbf{r}_{\mathbf{xy}} = \begin{bmatrix} r_{\mathbf{x}_1\mathbf{y}}\\ \vdots \\ r_{\mathbf{x}_j\mathbf{y}} \\ \vdots \\ r_{\mathbf{x}_p\mathbf{y}} \end{bmatrix}$$
+
+Then 
+$$\boldsymbol{\beta} = \mathbf{R}_{\mathbf{xx}}^{-1} \mathbf{r}_{\mathbf{xy}}$$
+where $\boldsymbol{\beta}$ is the $p\times 1$ vector of standardized regression coefficients.
+
+Interpretation of standardized regression coefficients:
+Variables are $z$ values, hence interpretations 
+One standard deviation increase in $x_j$ results in a $\beta_j$ standard deviation increase in $y$ with constant other predictors.
+
+
+
+$$R^2 = \boldsymbol{\beta'}\mathbf{r_\mathbf{xy}} = \begin{bmatrix} \beta_1 & \cdots & \beta_j & \cdots & \beta_p \end{bmatrix} \begin{bmatrix} r_{\mathbf{x}_1\mathbf{y}}\\ \vdots \\ r_{\mathbf{x}_j\mathbf{y}} \\ \vdots \\ r_{\mathbf{x}_p\mathbf{y}} \end{bmatrix}$$
+
+$$Var(\boldsymbol{\beta}) = \hat{\sigma}_e^2 \mathbf{R}_{\mathbf{xx}}^{-1}$$
+
+Variance inflation factor: 
+variance of estimates is inflated due to the correlation of the predictors
+because 
+diagonal of $\mathbf{R}_{xx}^{-1}$
+diagonals are 1 for uncorrelated predictors (= no inflation)
+
+
+## Sum of Squares and ANOVA Summary Table
+
+
+In standardized regression, the sum of squares simplify to:
+$SS_{std.Regression} = R^2$$
+$$SS_{std.Residual} = 1-R^2$$
+$$SS_{std.Total} = SS_{std.Regression} + SS_{std.Residual} = R^2 + (1-R^2) = 1$$
+Since $R^2$ is always $0 \leq R^2 \leq 1$, $SS_{std.Total}$ is always 1.
+
+Other anova still applies but here it is a bit special. connection to R^2
+
+: ANOVA Summary Table for Standardized Regression
+
+| Source        | SS               | df               | MS              | F              | p        |
+|---------------|:----------------:|:----------------:|:---------------:|:--------------:|:--------:|
+| **Regression**| $R^2$| $df_{Regression}=p$|$MS_{Regression}$|$F= \frac{MS_{Regression}}{MS_{Residual}}$|  |
+| **Residual**  | $1-R^2$  | $df_{Residual}=n-p-1$  |$MS_{Residual}$  |                |          |
+| **Total**     | $1$     | $df_{Total}$     |                 |                |          |
+
 # Uncorrelated predictors
 # Calculation Shortcuts
