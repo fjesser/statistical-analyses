@@ -1,0 +1,44 @@
+---
+title: 
+author: "Felix Eßer"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+      toc: true
+      toc_float: true
+      number_sections: true
+bibliography: '`r file.path(gsub("(?<=Statistical_Analyses).*", "", getwd(), perl = TRUE), "bibliography.bib")`'
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+```{r packages}
+# load packages
+library(tidyverse)
+```
+
+
+# Cohen's $d$
+
+Cohen's d
+
+Guidelines (short reference [@Cohen1992], book: [@Cohen1988])
+small: 0.20
+medium: 0.50
+large: 0.80
+
+
+Guidelines for education research Lipsey et al. 2012 (add this)
+
+
+
+
+
+
+
+
+# References
