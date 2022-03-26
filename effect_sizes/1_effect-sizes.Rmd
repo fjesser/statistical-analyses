@@ -18,7 +18,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r packages}
 # load packages
+library(patchwork) # combine multiple ggplots
 library(tidyverse)
+
+# Set theme for ggplot
+theme_set(theme_minimal())
 ```
 
 
@@ -36,6 +40,28 @@ Guidelines for education research Lipsey et al. 2012 (add this)
 
 
 
+```{r comp-cohensd}
+# All of the following works only if the first mean = 0 and sd = 1 for all
+cohens_d <- c(0.2, 0.5, 0.8, 1.1, 1.5, 2.0)
+
+for (i in seq_along(cohens_d)) {
+  # create plot
+  tmp_plot <- ggplot() +
+    stat_function(fun = dnorm, args = list(mean = 0, sd = 1), 
+                  geom = "area", fill = 2, alpha = 0.5) +
+    stat_function(fun = dnorm, args = list(mean = cohens_d[[i]], sd = 1),
+                  geom = "area", fill = 3, alpha = 0.5) +
+    xlim(c(-5, 5)) +
+    labs(title = bquote("Cohen's"~italic(d)~"="~.(cohens_d[[i]])))
+  # save plot to object
+  assign(str_c("d", i), tmp_plot)
+}
+
+# Output plots
+d1 + d2 + d3 + d4 + d5 + d6
+
+
+```
 
 
 
