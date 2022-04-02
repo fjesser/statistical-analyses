@@ -49,7 +49,9 @@ $\alpha$-error cumulation
 
 Two approaches as follow-up analysis after a significant $F$-test: 1. Post-hoc tests 2. Contrasts analysis
 
-## Post-hoc tests
+## Multiple Comparisons
+
+The ANOVA tests the omnibus hypothesis that all means are equal. If the ANOVA yields a significant result, then this means that at least one pair of means differ (is this true?). In order to further investigate which means differ, multiple comparisons are conducted. There are a lot of different approaches, that is why this topic is described in more detail in another section (link to multiple comparison). In the following, only a brief summary of multiple comparison is provided so that the rest of this section can be understood. Within the example analyses only the most prominent versions of multiple comparisons are shown. If a different approach is necessary, please see (link to multiple comparisons). 
 
 Post-hoc tests compare means of different factor levels.
 
@@ -76,36 +78,6 @@ Has more power than bonferroni-correction if all means are compared with each ot
 2.  Dunnett-Tes
 
 ## Contrast analysis
-
-+-----------------------+---------------------------------------------------------------+------+
-| Name of contrasts     | Explanation                                                   | Col3 |
-|                       |                                                               |      |
-| (R Code)              |                                                               |      |
-+=======================+===============================================================+======+
-| Dummy (default)       | Each factor level is compared to the first factor level.      |      |
-+-----------------------+---------------------------------------------------------------+------+
-| SAS                   | Each factor level is compared to the last factor level.       |      |
-|                       |                                                               |      |
-| (`contr.SAS()`)       |                                                               |      |
-+-----------------------+---------------------------------------------------------------+------+
-| Treatment             | Each factor level is compared to a user defined factor level. |      |
-|                       |                                                               |      |
-| (`contr.treatment()`) |                                                               |      |
-+-----------------------+---------------------------------------------------------------+------+
-| Sum                   |                                                               |      |
-|                       |                                                               |      |
-| (`contr.sum()`)       |                                                               |      |
-+-----------------------+---------------------------------------------------------------+------+
-| Helmert               |                                                               |      |
-|                       |                                                               |      |
-| (`contr.helmert()`)   |                                                               |      |
-+-----------------------+---------------------------------------------------------------+------+
-| Poly                  |                                                               |      |
-|                       |                                                               |      |
-| (`contr.poly()`)      |                                                               |      |
-+-----------------------+---------------------------------------------------------------+------+
-
-: Predefined Contrasts in \`R\`
 
 
 ### $\alpha$-error cumulation
