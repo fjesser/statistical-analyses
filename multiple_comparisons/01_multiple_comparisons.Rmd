@@ -1,0 +1,153 @@
+---
+title: 
+author: "Felix Eßer"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+      toc: true
+      toc_float: true
+      number_sections: true
+bibliography: '`r file.path(gsub("(?<=Statistical_Analyses).*", "", getwd(), perl = TRUE), "bibliography.bib")`'
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+Multiple Testing refers to the situation in which one conducts several statistical inferences.
+It is of interest that the null hypothesis can be safely rejected which means that no $\alpha$-error is made. Therefore, the $\alpha$-error rate is conventionally set to $\alpha = .05$. However, when conducting INDEPENDENT multiple tests
+
+
+A priori (also planned comparison) vs. a posteriori (also post-hoc)
+
+
+
+
+Terminology:
+
+- alpha
+    - false discovery
+- family-wise error rate (FWER)
+    + also called experimentwise error rate
+- false discovery rate (FDR)
+- Multiple Testing procedures (adjusting p-values)
+    - One-Step
+        - all $p$ values are compared to a predetermined cut-off
+    - Step-down
+        - p values are evaluated from smallest to largest
+        - each p value is compared to its own cut-off
+        - if a p-value is not significant, the null-hypothesis is accepted for the corresponding test as well as all remaining tests having higher p-values (even if higher p value would be sig. )
+    - Step-Up
+
+
+
+
+family-wise error rate ($FWER$; also called experiment-wise error rate) is the probability of making at least one $\alpha$-error (type I error) in a set of statistical tests:
+$$ FWER = \alpha_{fam} = 1 - (1-\alpha_r)^m$$
+Here, $\alpha_r$ is the the $\alpha$-level for a specific test $r$ and $m$ denotes the number of all tests (see appendix for derivation).
+
+```{r packages, message=FALSE}
+library(tidyverse)
+```
+
+```{r fwer}
+# vector m representing total number of tests
+m <- 1:50
+# alpha represents alpha for one test
+alpha <- 0.05
+# family-wise error-rate (fwer) dependent on m and alpha
+fwer <- 1 - (1 - alpha)^m
+
+
+ggplot(mapping = aes(x = m, y = fwer)) +
+  geom_point(size = 1) +
+  scale_x_continuous(breaks = seq(0, 50, 5)) +
+  scale_y_continuous(breaks = seq(0, 0.90, 0.20)) +
+  labs(title = bquote(
+    atop("Family-Wise Error Rate ("*italic("FWER")*") Dependent on the Number of Total Tests ("*italic("m")*")",
+         "with"~alpha == .(alpha))),
+    x = expression(paste("Number of total tests (", italic("m"), ")")),
+    y = expression(paste("Family-Wise Error Rate (", italic("FWER"), ")"))) +
+  theme_minimal()
+
+
+```
+
+For $m = 20$ tests, the probability to have at least one false-significant result (with a significance level $\alpha = .05$ for each test) is $ FWER = \alpha_{fam} = 1 - (1-.05)^{20} = 0.64$. This means there is a 64% chance of getting at least one false-significant result. With $m = 20$ test, one would expect to have $m \cdot \alpha = 20 \cdot 0.05 = 1$ falsely rejected null-hypothesis (also called false discovery). As the figure shows, $FWER$ increases with the number of tests ($m$).
+
+
+- What and why
+    + Also knwon as 
+        - multiple comparison (but closer to ANOVA and mean differences)
+    + Multiple Testing refer to the situation where one is interested in 
+    + $\alpha$ error inflation (link to alpha error)
+        + what is a p value (short definition and link)
+        + $p$-value is defined as the probability of obtaining a test statistic at least as large as the one observed, if the null hypothesis is true
+    + family-wise error-ate and false discovery rate
+- Where/Contexts
+    + ANOVA 
+    + correlations
+    + but applicable anywhere
+- How 
+    + p-Value Adjustment
+        - more independent from statistical analysis
+        - applicable everywhere, where $p$ values are
+    + Resampling Methods
+
+    
+    
+# $p$-Value Adjustment
+
+## Bonferronig correction
+
+- divide the $\alpha$-level by the $m$ tests to get the new $\alpha$ level for all $r$ tests
+
+Advantages:
+- easy 
+Disadvantages:
+- very conservative
+    + for many tests 
+
+## Adjustment of critical values in mean comparisons 
+- only relevant for mean comparisons (ANOVA)
+
+- maybe decide to include it elsewhere (Comparing Means)
+    + at least make a link
+    
+    
+Tukey HSD and Tukey-Kramer
+  - TukeyHSD only for equal sample sizes
+  - Tukey Kramer for unequal sample sizes
+
+```{r}
+
+library(emmeans)
+dat <- datasets::ToothGrowth |> 
+  mutate(dose = factor(dose))
+
+aov_mod <- aov(len ~ dose, data = dat)
+summary(aov_mod)
+
+TukeyHSD(aov_mod)
+
+pairs(emmeans(aov_mod, ~ dose), adjust = "tukey") |> str()
+# --> no CI
+
+library(multcomp)
+
+summary(glht(aov_mod, linfct = mcp(dose = "Tukey"), alternative = "greater"))
+
+```
+
+
+
+
+# Appendix
+
+The formula for the family-wise error rate ($FWER$) can be derived from the multiplication theorem of probabilites (link to probability):
+For two independent evens, event $A$ and event $B$, the probability that both event 
+$$P(A \cap B) = P(A) \cdot P(B)$$
+
+# References
