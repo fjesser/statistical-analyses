@@ -262,7 +262,13 @@ Report in text:
 
 Visualization with bar diagram with error bars (either sd, se or ci)
 
-## Two-Way ANOVA
+## Factorial ANOVA
+
+More than 1 factor (explanatory variable)
+
+Introduction of interaction effect
+
+- only presented for balanced designs! See (link to Non-orthogonal ANOVA) for unbalanced designs. In short, usually Type III sum of squares are used in unbalanced designs (explain)
 
 ### Theory of two-way ANOVA
 
@@ -272,7 +278,97 @@ simple effects
 - 
 
 
+### Data Two-Way ANOVA
+```{r}
+data_indep2 <- datasets::ToothGrowth |> 
+    mutate(dose = factor(dose))
+
+skim(data_indep2)
+```
+Note, the variable `dose` is an ordinal variable but is treated here as a nominal variable (link to scales of measurement).
+
+
+
 marginal means 
+
+
+```{r}
+data_indep2 |> 
+    ggplot(aes(x = dose, y = len, color = supp)) +
+    stat_summary(fun = mean, geom = "point") +
+    stat_summary(fun = mean, geom = "line", aes(group=supp)) +
+    stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.2)
+```
+
+
+Factor A with $j = 1, \ldots, g$ levels (j because it comes after i in the alphabet and i is used as the default iteration variable but it already taken for the number of cases; g for groups)
+Factor B with $k = 1, \ldots, h$ levels (k because it comes after j in alphabet; h because it comes after g in alphabet)
+
+Total sum of squares are outcome values minus the grad mean (overall mean, mean without considering any grouping). Represents total variability in $Y$
+$$SS_{Total} = \sum_{k=1}^h \sum_{j=1}^g \sum_{i=1}^{n_{cell}} (y_{kji} - \bar{Y})^2$$
+$$df_{Total} = N -1$$
+also 
+$$df_{Total} = df_{A} + df_{B} + df_{A\times B} + df_{Residual}$$
+
+
+
+Residual sum of squares (also error sum of squares),
+represents the average deviation of cases' values from their respective group mean.
+$$SS_{Residual} = \sum_{k=1}^h \sum_{j=1}^g \sum_{i=1}^{n_{cell}} (y_{kji} - \bar{Y}_{kj})^2$$
+
+$$df_{Residual} = n_{cell}-(h\cdot g)$$
+
+Sum of squares for factor A
+represents variation in cell means that can be attributed to factor A
+$$SS_{A} = n_{cell} \cdot h \cdot \sum_{j=1}^g (\bar{Y}_{j\bullet} - \bar{Y})^2$$
+
+$$df_A = g-1$$
+
+Sum of squares factor B
+represents variation in cell means that is attributed to factor B
+$$SS_{B} = n_{cell} \cdot g \cdot \sum_{k=1}^h (\bar{Y}_{\bullet k} - \bar{Y})^2$$
+
+$$df_B = h -1$$
+
+
+Interaction sum of squares
+represents variation in cell means that cannot be attributed to the main effects of factor A and B
+
+If there was no interaction effect, then the following would apply:
+$$\bar{Y}_{jk} - \bar{Y}_j - \bar{Y}_k + \bar{Y} = 0$$
+
+$$SS_{A\times B} = n_{cell} \cdot \sum_{k=1}^h \sum_{j=1}^g (\bar{Y}_{jk} - \bar{Y}_{j\bullet} - \bar{Y}_{\bullet k} + \bar{Y})^2$$
+$$df_{A \times B} = (g-1) \cdot (h-1)$$
+
+## Non-Orthogonal Factorial ANOVA: Unbalanced Designs
+
+- different number of observations per factor-level combination (cell)
+- In balanced designs the factors are independent from each other. This is different for non-orthogonal (unbalanced designs). 
+- Given unbalanced designs, different procedures can be conducted which lead to not identical results because there is no unique decomposition of the total sum of squares 
+- approaches mathematically equivalent to multiple regression with correlated predictors
+
+
+There are 4 different types of sum of squares.
+In balanced designs, all 4 types of sum of squares yield the same result.
+
+
+
+### Type I sum of squares
+used by `R`
+
+- order dependent (hierarchical)
+- adjusted means
+
+
+### Type II sum of squares
+
+### Type III sum of squares
+
+- harmonic mean (link to descriptive statistic) of sample sizes
+- adjustment of sum of squares as if they were balanced
+- unadjusted means
+
+
 
 
 # Comparing several dependent samples
