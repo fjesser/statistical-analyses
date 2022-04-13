@@ -110,9 +110,46 @@ Somer's $d$
 
 ## Pearson's Product-Moment-Correlation
 
-value range: $[-1, +1]$
+Pearson's product-moment-correlation $r$ is a correlation coefficient between two metric variables. It is one of the most used and most popular correlation coefficient. 
 
+Assumptions: 
+- both variables have at least metric scale of measurement
+- bivariate normal distribution of both variables
+    + However, when testing $r$ against 0, the test is robust (Diehl & Arbinger, 2001) so that the assumption of bivariate normality is often not conducted.
 
+Interpretation:
+- The value range is: $[-1, +1]$
+- Direction of the relationship
+  - a negative sign means there is a negative relationship between the variables: Higher values on one variable go along with smaller values on the other variable.
+  - a positive sign means there is a positive relationship between the variables: Higher values on one variable go along with higher values on the other variable. 
+  - zero means there is no relationship between the variables
+- Size of the relationship
+    - A higher absolute value of $r$ indicates a stronger relationship.
+    - What constitutes a weak or strong relationship depends on the application context.
+    - However, [@Cohen1988]
+
+Characteristics:
+- As mentioned before, the value range of $r$ is: $[-1, +1]$
+- $r$ is sensitive to outliers
+    + Therefore, it is advisable to check for outliers (link to outliers or something like that)
+- $r$ is a measure for the *linear* relationship between two variables
+    + Thus, two variables can be (non-lineary) related, although $r = 0$.
+    + Therefore, view the scatterplot before interpreting the $r$. 
+- $r$ is invariant against linear transformations (link to something like transformations)
+
+By means of two base `R` functions in the `{stats}` package, it is possible to calculate Pearson's $r$. The `cor()` function does not provide a statistical significance test, whereas `cor.test()` provides a significant test. In contrast to `cor.test()`, it is possible to create correlation matrices with the `cor()` function (see link to Correlation Matrices).
+
+```{r pearson}
+# Calculate Pearson correlation
+cor_pearson <- cor.test(mtcars$mpg, mtcars$qsec, # default: method = "pearson"
+                        alternative = "greater") # default: alternative = 
+                                                          # "two.sided"; "less"
+
+# Output Pearson correlation
+cor_pearson
+```
+
+The correlation between the variables is $r$ (`r cor_pearson$parameter`) =`r cor_pearson$estimate`, $p =$ `r cor_pearson$p.value` (one-tailed). 
 
 # A Nominal and a Ordinal Variable
 
