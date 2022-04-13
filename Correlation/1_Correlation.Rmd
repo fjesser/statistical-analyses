@@ -1,8 +1,13 @@
 ---
 title: "Correlation"
 author: "Felix Eßer"
-date: "10/27/2020"
-output: html_document
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+      toc: true
+      toc_float: true
+      number_sections: true
+bibliography: '`r file.path(gsub("(?<=Statistical_Analyses).*", "", getwd(), perl = TRUE), "bibliography.bib")`'
 ---
 
 ```{r setup, include=FALSE}
@@ -11,6 +16,32 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 # Introduction and Overview
+
+Correlation coefficients quantify the degreee of covariation between two variables. Due to the possible combinations of different scales of measurement, several correlation coefficients exist. The presentation of the different correlation coefficients is structured along the different combinations of scales of measurement. 
+
+For each correlation coefficient the general outline is as follows:
+1. Assumptions of the correlation coefficient
+2. Computation
+3. Interpretation
+4. Properties
+5. Visualization
+
+In order to have clear overview over the several correlation coefficients, the mathematical background is located in the appendix. 
+
+
+# Load Packages and Data
+
+```{r packages}
+library(tidyverse) # data wrangling, etc. 
+```
+
+
+
+```{r data}
+glimpse(mtcars)
+```
+
+
 
 # Two Nominal Variables
 
