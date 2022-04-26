@@ -31,7 +31,7 @@ In order to have clear overview over the several correlation coefficients, the m
 
 # Load Packages and Data
 
-```{r packages}
+```{r packages, message=FALSE}
 library(tidyverse) # data wrangling, etc. 
 ```
 
@@ -130,6 +130,8 @@ value range: [0, 1]
 -> used for ordinal variables with ordered categories
 -> assumes that metric normally distributed variables underlie both ordinal variables with 
 
+continuity correction
+two-step estimation (quicker), ml estimation (slower and deprecated)
 
 ## Somer's $d$
 -> used for a singular ordinal variable (can have ties) and a ordinal variable with ordered categories
@@ -216,7 +218,12 @@ singular ordinal variable
 
 ## Two Metric Variables
 
+### Pearson's Product-Moment-Correlation
+
+The first building block for calculating Pearson's product-moment correlation is the summed cross-product deviations of variable $X$ and variable $Y$:
+
 $$CP_{XY} = \sum^n_{i = 1} (x_i - \bar{x}) \cdot (y_i - \bar{y})$$
+The summed cross-product deviations is the sum of the products
 
 
-
+# References
