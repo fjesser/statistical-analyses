@@ -57,9 +57,34 @@ $$\hat{\varphi} = \frac{n_{11}\cdot n_{22} - n_{12} \cdot n_{21}}{\sqrt{(n_{11} 
 
 The more both distributions differ, the smaller the possible absolute value of $\varphi$.
 
+
 There are corrections but it is easier to use other correlation measures for dichotomous variables.
 
 ### Yules Q
+
+```{r}
+library(correlation)
+
+```
+
+
+is $\hat{\gamma}$ for two dichotomous variables
+is also a function of Odds Ratio (link to Odds ratio) that is normed to fall between -1 and 1
+
+$$Q = \frac{n_{11}\cdot n_{22} - n_{12} \cdot n_{21}}{n_{11}\cdot n_{22} + n_{12} \cdot n_{21}}$$
+
+```{r}
+correlation(mtcars[, c("vs", "am")], method = "gamma")
+
+
+```
+
+
+```{r}
+YuleCor(mtcars[, c("vs", "am")])
+```
+
+
 
 ### Odds-Ratio
 
