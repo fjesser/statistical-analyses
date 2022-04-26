@@ -52,6 +52,9 @@ glimpse(mtcars)
 value range: [-1, +1]
 boundary value can only be obtained if relationship is perfect **and** both variables have the same distribution.
 
+
+$$\hat{\varphi} = \frac{n_{11}\cdot n_{22} - n_{12} \cdot n_{21}}{\sqrt{(n_{11} + n_{21}) \cdot (n_{12} + n_{22}) \cdot (n_{11} + n_{12}) \cdot (n_{21} + n_{22})}}$$
+
 The more both distributions differ, the smaller the possible absolute value of $\varphi$.
 
 There are corrections but it is easier to use other correlation measures for dichotomous variables.
