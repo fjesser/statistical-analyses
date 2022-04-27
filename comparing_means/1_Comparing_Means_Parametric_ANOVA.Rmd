@@ -270,15 +270,98 @@ Introduction of interaction effect
 
 - only presented for balanced designs! See (link to Non-orthogonal ANOVA) for unbalanced designs. In short, usually Type III sum of squares are used in unbalanced designs (explain)
 
+
+It is also possible to analyze a factorial ANOVA with contrasts and get the same result (link to contrasts)
+
 ### Theory of two-way ANOVA
 
 main effects and interaction effects
+- main effect of A
+- main effect of B
+- interaction effect of A and B 
 
 simple effects
 - 
 
+Factor A with $j = 1, \ldots, g$ levels
+- Factor B with $k = 1, \ldots, h$ levels
 
-### Data Two-Way ANOVA
+Total variability is the variability of the outcome variable without considering any predictor which can be partitioned into the variability of the effect of factor $A$, the effect of factor $B$, and the interaction effect between factor $A$ and $B$.
+$$\begin{array}{rccll}
+SS_{Total} & = & \sum_{k=1}^h \sum_{j=1}^g \sum_{i=1}^{n_{cell}} (y_{ijk} - \bar{Y})^2 \\
+& = & SS_{Model} &+ &SS_{Residual}\\
+&=& \overbrace{SS_A + SS_B + SS_{A \times B}} &+& SS_{Residual}
+\end{array}$$
+
+$$df_{Total} = N - 1$$
+
+Observed score minus cell mean
+$$SS_{Residual} = \sum_{k=1}^h \sum_{j=1}^g \sum_{i=1}^{n_{cell}} (y_{ijk} - \bar{Y}_{jk})^2 $$
+
+$$df_{Residual} = N - (h\cdot g)$$
+
+
+Model sum of squares
+$$SS_{Model} = n_{cell} \cdot \sum_{k=1}^h \sum_{j=1}^g (\bar{Y}_{jk} - \bar{Y})^2$$
+$$df_{Model} = df_{A} + df_{B} + df_{A \times B}$$
+
+Sum of squares for factor $A$
+$$SS_{A} = n_{cell} \cdot h \sum_{j=1}^g (\bar{Y}_{j\bullet} - \bar{Y})^2$$
+
+$$df_{A} = g-1$$
+
+Sum of squares for factor $B$
+$$SS_{B} = n_{cell} \cdot g \sum_{k=1}^h (\bar{Y}_{\bullet k} - \bar{Y})^2$$
+
+$$df_{B} = h-1$$
+
+Sum of squares for interaction between factor $A$ and $B$
+
+If there were no interaction effect, the cell means would be only due to the effect of A and B: 
+$$\bar{Y}_{jk} = \bar{Y}_{j\bullet} + \bar{Y}_{\bullet k} - \bar{Y}$$
+which is the same as:
+$$\bar{Y}_{jk} - \bar{Y}_{j\bullet} - \bar{Y}_{\bullet k} + \bar{Y} = 0$$
+Therefore, if the previous expression is not 0, then there is an interaction effect. Deviations from zero need to be squared and added together to get the sum of squares for the interaction effect.
+$$SS_{A\times B} = n_{cell} \cdot \sum_{k=1}^h \sum_{j=1}^g (\bar{Y}_{jk} - \bar{Y}_{j\bullet} - \bar{Y}_{\bullet k} + \bar{Y})^2$$
+$$df_{A \times B} = (g-1)\cdot (h-1)$$
+$df_{A \times B}$ is the same principle as the $df$ for the $\chi^2$ (row-1 times column-1) (link to chi square part)
+
+
+Creation of Mean Squares...
+
+Calculation of $F$ tests
+
+#### Interactions
+
+different types of interaction
+when no interaction lines are parallel
+
+3 types of interaction
+
+1) ordinal
+    - all main effects can be interpreted globally, meaning over the levels of the other factor(s)
+2) disordinal
+    - no main effects can be interpreted globally
+3) hybrid
+    - not all but a subset of factors can be interpreted gobally
+    
+    
+add a bunch of line graphs
+
+
+#### Two-Way ANOVA by hand
+
+This is to show the calculations 
+
+minimal data example
+again only for balanced designs; see non-orthogonal Factorial ANOVA (link to non-orthogonal)
+
+
+Include sanity check: SS_T = SS_A ....
+
+
+
+#### Data Two-Way ANOVA
 ```{r}
 data_indep2 <- datasets::ToothGrowth |> 
     mutate(dose = factor(dose))
@@ -339,6 +422,12 @@ $$\bar{Y}_{jk} - \bar{Y}_j - \bar{Y}_k + \bar{Y} = 0$$
 
 $$SS_{A\times B} = n_{cell} \cdot \sum_{k=1}^h \sum_{j=1}^g (\bar{Y}_{jk} - \bar{Y}_{j\bullet} - \bar{Y}_{\bullet k} + \bar{Y})^2$$
 $$df_{A \times B} = (g-1) \cdot (h-1)$$
+
+Model Sum of Squares
+(as if doing a one-way ANOVA with different contrast)
+
+$$SS_{Model} = SS_A + SS_B + SS_{A\times B}$$
+
 
 ## Non-Orthogonal Factorial ANOVA: Unbalanced Designs
 
@@ -593,7 +682,6 @@ There are $s$ non redundant pairs of comparison $$s = \frac{1}{2} \cdot K \cdot 
 
 ### Two-way ANOVA
 
-$$SS_T = SS_A + SS_B + SS_{A \times B} + SS_W$$
 
 In the two-way ANOVA, there are three possible effect (main effect of factor $A$, main effect of factor $B$ and interaction effect of factor $A$ and $B$). For each effect a effect measure can be estimated. This is called the non-partial effect size measure:
 
