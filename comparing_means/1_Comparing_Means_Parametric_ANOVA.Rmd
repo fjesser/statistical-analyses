@@ -55,6 +55,7 @@ Two approaches as follow-up analysis after a significant $F$-test: 1. Post-hoc t
 
 The ANOVA tests the omnibus hypothesis that all means are equal. If the ANOVA yields a significant result, then this means that at least one pair of means differ (is this true?). In order to further investigate which means differ, multiple comparisons are conducted. There are a lot of different approaches, that is why this topic is described in more detail in another section (link to multiple comparison). In the following, only a brief summary of multiple comparison is provided so that the rest of this section can be understood. Within the example analyses only the most prominent versions of multiple comparisons are shown. If a different approach is necessary, please see (link to multiple comparisons). 
 
+a priori (planned comparison) vs. a posteriori (post-hoc)
 Post-hoc tests compare means of different factor levels.
 
 To avoid $\alpha$-error cumulation, there are two common procedures: 
@@ -94,6 +95,7 @@ library(afex) # ANOVA
 library(car) # Levene Test
 library(effectsize) # omega^2
 library(emmeans) # estimate marginal means
+library(ggpubr) # extension of significance lines/stars for ggplot2 
 library(multcomp) # control for alpha error in multiple testing
 library(skimr) # descriptive statistics
 library(tidyverse) # data wrangling and plotting
@@ -276,6 +278,8 @@ Visualization with bar diagram with error bars (either sd, se or ci)
 
 ## Factorial ANOVA
 
+Revise everything!
+
 More than 1 factor (explanatory variable)
 
 Introduction of interaction effect
@@ -285,6 +289,28 @@ Introduction of interaction effect
 
 It is also possible to analyze a factorial ANOVA with contrasts and get the same result (link to contrasts)
 
+```{r}
+
+# ggpubr facilitates process but there is no option for controlling for 
+# multiple comparison
+# therefore geom_signif is better because manual adjustment is possible
+
+data_indep1 |> 
+    mutate(seconddv = weight +10 |>  rnorm()) |> 
+    pivot_longer(cols = c(weight, seconddv), names_to = "variable",
+                 values_to = "value") |> 
+    ggplot(aes(x = variable, y = value, fill = group)) +
+    stat_summary(fun = mean, geom = "bar", position = "dodge") +
+    geom_signif(comparison = list(c("ctrl", "trt1")),
+                test =  "t.test")
+               
+
+```
+
+
+
+## Two-Way ANOVA
+
 ### Theory of two-way ANOVA
 
 main effects and interaction effects
@@ -292,7 +318,7 @@ main effects and interaction effects
 - main effect of B
 - interaction effect of A and B 
 
-simple effects
+simple (main) effects
 - 
 
 Factor A with $j = 1, \ldots, g$ levels
@@ -672,14 +698,16 @@ afex_plot(two_rep, x = "measurement", trace = "within_measurement", error = "wit
 
 # Comparing independent and dependent samples
 
+Also called Split-Plot-Design
+
 ```{r}
 datasets::sleep
 ```
 
 ## Assumptions
 
--   Sphericity of the dependent factor
--   equality of variance in the independent factor
+-   Sphericity of the dependent factor(s)
+-   equality of variance in the independent factor(s)
 
 ```{r}
 library(afex)
@@ -698,6 +726,7 @@ em_mix_anova <- emmeans(mix_anova, ~treatment)
 
 pairs(em_mix_anova)
 ```
+
 
 # Appendix: Theory and Mathematics of ANOVA
 
