@@ -11,7 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-Analysis of Variance (ANOVA) is a family of analyses to compare the mean of several samples. Hence, the outcome variable has at least to be metric scale of measurement and the predictor variable(s) has/have nominal scale of measurement.
+Analysis of Variance (ANOVA) is a family of analyses to compare the mean of several samples. Hence, the outcome variable has to be at least metric scale of measurement and the predictor variable(s) has/have nominal scale of measurement.
+
+Total variability of the outcome score is partitioned into variability that can be explained with the predictors and variability that can not be explained by the predictors. That is the reason why it is called analysis of variance (analysis = partitioning).
 
 In the context of ANOVA, the predictor is often called factor or independent variable (note that independent variable implies causal influence). Factors have levels which are also called conditions. For example, in a clinical study it is of interest how a new drug influences the blood pressure of patients. To assess the efficacy of the new drug it is compared to an old drug as well as a placebo. The factor *drug* in this study has three levels: 1) new drug, 2) old drug and 3) placebo. After assigning participants randomly to one of the three levels, administering the corresponding drug and measure the blood pressure, it is possible to compare the means of all blood pressures in the three conditions with a ANOVA. 
 
@@ -79,6 +81,7 @@ Has more power than bonferroni-correction if all means are compared with each ot
 
 ## Contrast analysis
 
+link to contrast analysis on branch mult_comp
 
 ### $\alpha$-error cumulation
 
@@ -118,13 +121,22 @@ Effect Size $\hat{\eta}^2 = \frac{SS_B}{SS_T}$ (see appendix for explanation). H
 
 #### Assumptions of one-way ANOVA
 
-1.  Independent residuals + residuals are independent from another + this assumption is fulfilled via the research design + is for example violated through repeated measures + violation increases hugely probability of committing an $\alpha$ error
-
-2.  Homoskedasticity + Equal variance of residuals between conditions + is tested with Levene's test for equal variances + The $F$-test is relatively robust against violations of the assumption of homoskedasticity if samples have the same size - if variance in smaller sample is larger than in a larger sample, the $F$-test becomes too liberal (higher risk of committing an $\alpha$ error) - if variance in smaller sample is smaller than in a larger sample, the $F$-test becomes too conservative (higher risk of committing an $\beta$ error) + If there is variance heterogeneity (heteroskedasticity), the Brown-Forsythe-test or the Welch-test can be used which correct the result. No one of both is superior to the other.
-
-3.  Normal distribution of residuals\
-
-    -   As a residuum is the deviation of a measurement from the mean of the condition, measurements have to distribute normally within conditions + On the basis of the central limit theorem, the $F$-test is relatively robust against violations against the normality assumption under large sample sizes. So you can argue this assumption away. + If the violation of the normality assumption is due to outliers, robust variants of ANOVA can be conducted.
+1.  Independent residuals 
+    + residuals are independent from another 
+    + this assumption is fulfilled via the research design 
+    + is for example violated through repeated measures 
+    + violation increases hugely probability of committing an $\alpha$ error
+2.  Homoskedasticity 
+    + Equal variance of residuals between conditions 
+    + is tested with Levene's test for equal variances 
+    + The $F$-test is relatively robust against violations of the assumption of homoskedasticity if samples have the same size 
+        - if variance in smaller sample is larger than in a larger sample, the $F$-test becomes too liberal (higher risk of committing an $\alpha$ error) 
+        - if variance in smaller sample is smaller than in a larger sample, the $F$-test becomes too conservative (higher risk of committing an $\beta$ error) 
+    + If there is variance heterogeneity (heteroskedasticity), the Brown-Forsythe-test or the Welch-test can be used which correct the result. No one of both is superior to the other.
+3.  Normal distribution of residuals
+    -   Since a residuum is the deviation of a measurement from the mean of the condition, measurements have to distribute normally within conditions 
+    + On the basis of the central limit theorem, the $F$-test is relatively robust against violations against the normality assumption under large sample sizes. So you can argue this assumption away. 
+    + If the violation of the normality assumption is due to outliers, robust variants of ANOVA can be conducted.
 
 ### Data
 
@@ -493,7 +505,7 @@ glimpse(data_dep)
 
 -   Assumption of normally distributed residuals
 
-$$SS_T~~=~~SS_{BP}~+ \underbrace{SS_{WP}}_{SS_M + SS_R}$$
+$$SS_T=SS_{BP}~+ \underbrace{SS_{WP}}_{SS_M + SS_R}$$
 
 (a less restrictive form of compound symmetry, which assumes that the variances of the differences between data taken from the same participant (or other entity being tested) are equal. This assumption is most commonly found in repeated-measures ANOVA but applies only where there are more than two points of data from the same participant (see also Greenhouse--Geisser correction, Huynh--Feldt correction).)
 
@@ -582,7 +594,7 @@ afex_plot(two_rep, x = "measurement", trace = "within_measurement", error = "wit
 ### Post-hoc tests
 
 ```{r}
-pairwise.t.test()
+#pairwise.t.test()
 ```
 
 # Comparing independent and dependent samples
@@ -634,7 +646,7 @@ where $N_k$ is the number of cases within a condition.
 
 Sum of Squares:
 
-$$SS_T = SS_B + SS_W$$
+$$SS_T = SS_A + SS_{Residual}    $$
 
 $SS_T$ = total sum of squares; represents the total variation of the data which can be decomposed $$SS_T = \Sigma_{k=1}^{K} \Sigma_{n=1}^{N} (y_{kn} - \overline{y})^2$$
 
