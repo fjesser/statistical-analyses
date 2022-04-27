@@ -443,6 +443,9 @@ $$SS_{Model} = SS_A + SS_B + SS_{A\times B}$$
 
 ## Non-Orthogonal Factorial ANOVA: Unbalanced Designs
 
+control everything that is written here!
+
+
 - different number of observations per factor-level combination (cell)
 - In balanced designs the factors are independent from each other. This is different for non-orthogonal (unbalanced designs). 
 - Given unbalanced designs, different procedures can be conducted which lead to not identical results because there is no unique decomposition of the total sum of squares 
@@ -452,22 +455,92 @@ $$SS_{Model} = SS_A + SS_B + SS_{A\times B}$$
 There are 4 different types of sum of squares.
 In balanced designs, all 4 types of sum of squares yield the same result.
 
-
-
-### Type I sum of squares
+### 4 Types of Sum of Squares
+#### Type I sum of squares
 used by `R`
 
 - order dependent (hierarchical)
 - adjusted means
 
 
-### Type II sum of squares
+#### Type II sum of squares
 
-### Type III sum of squares
+#### Type III sum of squares
 
 - harmonic mean (link to descriptive statistic) of sample sizes
 - adjustment of sum of squares as if they were balanced
 - unadjusted means
+
+
+### R application
+
+Make balanced dataset unbalanced
+```{r}
+skimr::skim(data_indep2)
+
+str(data_indep2)
+data_indep2$supp == "OJ"
+
+set.seed(567865) # because taking a sample
+data_unbalanced <- 
+    data_indep2 |> 
+    filter(supp == "OJ") %>%
+    slice_sample(n = nrow(.)/2) |> 
+    rbind(filter(data_indep2, supp != "OJ"))
+
+
+skim(data_unbalanced)
+```
+
+Standard aov function
+```{r}
+aov_type1 <- aov(len ~ supp*dose, data = data_unbalanced)
+summary(aov_type1)
+
+```
+
+```{r}
+aov_type1r <- aov(len ~ dose*supp, data = data_unbalanced) # reversed order
+summary(aov_type1r)
+```
+
+different results!!
+
+
+
+Using base R to get type III sum of squares
+```{r collapse=TRUE}
+# predictors must be factors
+contrasts(data_unbalanced$supp) <- contr.sum(length(levels(data_unbalanced$supp)))
+contrasts(data_unbalanced$dose) <- contr.sum(length(levels(data_unbalanced$dose)))
+
+aov_ctr <- aov(len ~ supp*dose, data_unbalanced)
+drop1(aov_ctrr, ~., test = "F") # output
+aov_ctrr <- aov(len ~ dose*supp, data_unbalanced)
+drop1(aov_ctrr, ~., test = "F")
+```
+output are the same
+
+
+
+lm approach 
+```{r}
+aov_lm <- lm(len ~ supp*dose, data_unbalanced)
+summary(aov_lm)
+```
+
+
+Using a package
+add afex package stuff
+```{r}
+library(car)
+Anova(aov_type1, type = "III")
+```
+
+
+
+
+
 
 
 
