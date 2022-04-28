@@ -26,10 +26,364 @@ Reasons to conduct multiple ANOVAs:
 - replication of former ANOVA results
 
 
-## Theory of MANOVA
+# MANOVA and Discriminant Function Analysis
+In this section a bit of theory is explained about the MANOVA and the follow up analysis, the discriminant function analysis. For more theory and the mathematics behind the MANOVA see the appendix of this site ([Theory and Mathematics of MANOVA](#theory-and-mathematics-of-manova)).
 
-### Decomposition of measured scores
+## Assumptions of MANOVA
+1. Independent residuals
+    - within and between groups
+2. Multivariate normality of the residuals
+    - can be tested with Marida's test of multivariate normality
+3. Homogeneity of the withing (residual) covariance matrices
+    - this includes homoskedasticity (homogeneity of variance = equal residual variances) and homogeneity of the residual covariances between the groups
+    - can be tested with the Box-M Test; can be calculated with a $\chi^2$ or $F$ approximation
+    - The Box-M test is very sensitive. In absence of multivariate normality this test can lead to a significant result although the within covariance matrices are equal. Therefore, it is advisable to ascertain multivariate normality in advance.
 
+## Hypotheses and Test Statistics
+
+The null hypothesis states that all outcome means are equal within and between groups.  
+$H_0: \mu_{11} = \ldots = \mu_{ij} = \ldots = \mu_{pJ}$  
+
+The alternative hypothesis states that at least two means are not equal.  
+$H_1: \neg H_0$ or $H_1: \mu_{ij} \neq \mu_{il}$ for at least one $i$ and a pair $(j,l), j \neq l$
+
+There are 4 test statistics to evaluate which hypothesis is supported:
+
+1. Pillai's trace (Bartlett-Pillai-criterion; $V$)
+    - the greater the effect, the greater $V$
+2. Wilks' $\Lambda$
+    - the greater the effect, the smaller Wilks' $\Lambda$
+3. Hotelling's trace (Hotelling-Lawley-criterion; $U$)
+    - the greater the effect, the greater $U$
+4. Roy's largest root ($\Theta$)
+    - the greater the effect on the first discriminant function (see [discriminant function analysis](#discriminant-function-analysis) ), the greater $\Theta$
+    - proportion of variance on the first discriminant function explained by the groups
+
+
+## Choosing a test statistic and violation of assumptions
+
+No test statistic is superior to all other test statistics under all circumstances. Test statistics differ in respect to robustness and power. 
+
+Robustness and violation of assumptions:
+
+- Violation of independent residuals
+    + has severe effects on the $\alpha$-rate (Stevens, 2009)
+    + Therefore, ensure independence through study design or use multilevel procedures 
+- Violation of multivariate normality but not homogeneity of within covariance matrices
+    + all test statistics are robust, though power is diminished
+    + use Pillai's trace (Finch & French, 2013)
+    + in presence of platykrutic distributions of the outcome variables Roy's root is affected (Olson, 1976)
+- Violation of homogeneity of within covariance matrices but not multivariate normality
+    + if sample sizes are equal, 
+        * Hotelling's and Pillai's trace are robust and the Box-M test is often disregarded.   
+    + if sample sizes are not equal, 
+        * these test statistics are not robust. 
+        * If the greater sample sizes produce the greater variances and covariances, the statistics will be conservative.
+        * If the smaller sample sizes produce the greater variances and covariances, the statistics will be liberal. In this case be cautious with significant results! One can try to randomly delete cases from the larger sample sizes or use robust MANOVA.
+    + use approach according to Raykov (2001) or correction of $F$-values (James, Johansen, Kim or Yao)
+
+Power:
+
+- Violation of multivariate normality reduces power
+- If group differences are attributable to one underlying dimension of the outcome variables
+    + most to least power: Roy's largest root, Hotelling's trace, Wilks' $\Lambda$ and Pillai's trace
+- If group differences are attributable to more than one underlying dimension of the outcome variables
+    + most to least power: Pillai's trace, Wilks' $\Lambda$, Hotelling's trace and Roy's largest root
+
+
+## Effect size
+
+The effect sizes in MANOVA is are a generalization of the effect size in ANOVA and is therefore called the multivariate $\eta^2_{mult}$. On the basis of each test statistic, except for Roy's largest root, a multivariate effect size $\hat{\eta}^2_{mult}$ can be estimated. For Roy's largest root, the test statistic is a effect size itself. 
+
+Similar to the ANOVA the $\eta^2_{mult}$ is not an unbiased estimator for the effect in the population. Therefore, correction formulas were used to create the unbiased estimator $\hat{\omega}^2_{mult}$ (Grissom & Kim, 2012). Especially for smaller sample sizes $\hat{\omega}^2_{mult}$ should be used. However, there is no `R` package including this statistic. 
+
+In addition it is advisable to calculate a 95% confidence interval for the estimated effect size. This can be done in several ways. One approach is:
+
+1. Transform eta-squared into r (squareroot)
+2. Use fisher transformation and sample N to transform r into z; that gives you CI of z
+3. Transform CI of z back into CI of r
+4. Square CI of r to obtain CI of eta-squared."
+
+
+## Discriminant Function Analysis
+
+After establishing significance with the MANOVA, it is of interest on which outcome variables the groups differ. Therefore, univariate ANOVAs can be conducted, however, this procedure is not recommended since it does not take into account the relationships between the variables. 
+
+Another approach is to perform a discriminant function analysis. On the basis of the outcome variables discriminant functions are constructed in the way that the group differences are maximized. Therefore, the discriminant function analysis can be considered as the inversion of the MANOVA. The number of the discriminant functions is the minimum of the number of outcome variables and the number of groups minus 1. The discriminant function is a weighted sum of the outcome variables and represents an underlying dimension of the outcome variables. 
+
+The weights are calculated in the following manner:  
+1. Maximization of the ratio of the between and within sum of squares
+    - the first discriminant function discriminates maximal between groups
+2. The resulting differences between groups are represented by a secon, third, ... discriminant function. 
+3. The discriminant functions are orthogonal (uncorrelated)
+
+In addition to the weights, there exist   
+- normed weights and 
+    - the discriminant functions can have different means and variances
+    - to compare the discriminant functions they can be standardized 
+    - they have a mean of zero and a within variance of 1 
+- standardized weights
+    - standardize outcome variables (not discriminant functions)
+    
+The correlation of the discriminant function with the outcome variables is called *structural coefficient*
+
+Add how is DFA interpreted
+
+Another measure to evaluate the discriminant function analysis is the canonical correlation. The canonical correlation is the correlation between the grouping variable and the constructed discriminant function. This coefficient ranges between 0 and 1, while higher values represent a larger association. Squaring the canonical correlation results in the proportion of total variation explained by differences in group means in the corresponding discriminant function.
+
+
+# Load packages and data
+
+```{r packages, results='hide', message=FALSE}
+library(candisc) # for discriminant function analysis
+library(car) # effect size for MANOVA
+library(heplots) # Box-M test and effect size for MANOVA
+library(MVN) # test of multivariate normality
+library(skimr)
+library(tidyverse)
+```
+
+```{r data}
+# Import data from psych package on ability measures
+sat_data <- psych::sat.act %>% 
+  as_tibble() %>% 
+  mutate(gender = factor(gender, labels = c("male", "female")),
+         education = factor(education)) %>% 
+  na.omit() # discard cases with missing data (otherwise box M test won't work)
+  
+glimpse(sat_data)
+```
+| Variable  | Meaning                                                        |
+|-----------|----------------------------------------------------------------|
+| gender    | males = 1, females = 2                                         |
+| education | self reported education 1 = high school... 5 = graduate work   |
+| age       | in years                                                       |
+| ACT       | ACT composite scores may range from 1 -- 36; Norms: mean of 20 |
+| SATV      | SAT verbal scores may range from 200 -- 800                    |
+| SATQ      | SAT quantitative scores may range from 200 -- 800              |
+
+
+The following model will be analyzed: `ACT`, `SATV` and `SATQ` are the outcome variables and `education` is the grouping variable.
+
+# Descriptive Statistics and Plots
+
+```{r correlation}
+cor(select(sat_data, ACT, SATV, SATQ))
+```
+
+ 
+
+# Testing the Assumptions
+## Independent residuals
+## Multivariate normality of the residuals
+
+```{r marida}
+# create manova model to extract residuals
+pre_manova <- manova(cbind(ACT, SATV, SATQ) ~ education, data = sat_data)
+
+# conduct marida's test of multivariate normality
+print(mvn(pre_manova$residuals,
+          univariatePlot = "histogram",
+          multivariatePlot = "qq"))
+```
+
+Unfortunately, the degrees of freedom of Marida's test are not printed or contained inside the output of the `mvn()`. However, in the linked paper of the `{MVN}` package, the calculations of the degrees of freedom for the $chi^2$ distributed test statistic for the multivariate skewness are provided, where $p$ equals the number of variables:
+
+- For Marida's multivariate skewness:
+    + $df = p(p+1)(p+2)/6$
+- For Marida's multivariate kurtosis: 
+    + is approximately normally distributed with
+    + $\mu = p(p+2)$ and $\sigma^2 = 8p(p+2)/n$
+    + note that the resulted $p$ value is two-sided if you want to calculate it yourself and the test statistic is transformed into a standard normal distribution!
+
+
+
+The b
+By means of the `cqplot()` function of the `{heplots}` package, it is possible
+```{r qq residuals}
+cqplot(pre_manova)
+```
+
+
+
+## Homogeneity of the within covariance matrices
+The Box-M test can be conducted with the `boxM()`-function of the `{biotools}` package. 
+
+```{r box-m-test}
+(box_test <- boxM(sat_data[, c("ACT", "SATV", "SATQ")], sat_data$education))
+```
+The Box-M-test was significant, $\chi^2$(`r box_test$parameter`) = `r box_test$statistic`, $p = $ `r box_test$p.value`. Therefore, the assumption of homogeneous residual covariance matrices is not fulfilled. 
+
+However, since the Box-M test is very sensitive, especially in absence of multivariate normality, it has to be treated with caution. See the theory section. 
+
+In
+```{r cov ellipses}
+covEllipses(sat_data[, c("ACT", "SATV", "SATQ")], sat_data$education, pooled = FALSE, # fill = TRUE,
+            variables = 1:3)
+```
+
+
+# MANOVA
+
+```{r MANOVA}
+# Calculate model
+manova_mod <- manova(cbind(ACT, SATV, SATQ) ~ education, data = sat_data)
+
+# Print all multivariate statistics at once
+# only one: summary(manova_mod, test = "x")
+walk(c("Pillai", "Wilks", "Hotelling-Lawley", "Roy"), 
+     ~print(summary(manova_mod, test = .x)))
+```
+
+Usually, just one of the four multivariate statistics is reported. For instructive purposes, all four statistics are reported:
+
+```{r report statistics, echo=FALSE, results='asis'}
+# Code chunk for dynamic report
+# Save statistics for easier access in dynamic report
+m_stats <- map(c("Pillai", "Wilks", "Hotelling-Lawley", "Roy"), 
+               ~summary(manova_mod, test = .x)$stats) # MANOVA tables as list
+
+# save names and geek test statistic symbols
+m_names <- c("Pillai's trace", "Wilks' $\\Lambda$",
+             "Hotelling's trace", "Roy's largest root")
+m_greek <- c("$V$", "$\\Lambda$", "$U$", "$\\Theta$")
+
+for (i in seq(m_stats)) { # loop over test statistics
+  cat("> - Using ", m_names[[i]], ", there was a significant effect of the grouping variable (`education`) on the outcome variables (`ACT` `SATV` and `SATQ`) ", m_greek[[i]], "=", 
+      round(m_stats[[i]]["education", 2], 3), 
+      ", $F$(", m_stats[[i]]["education", "num Df"], ", ", 
+      m_stats[[i]]["education", "den Df"], ") = ", 
+      round(m_stats[[i]]["education", 3], 2), ", $p =$ ",
+      round(m_stats[[i]]["education", "Pr(>F)"], 6),
+      ".\n", # newline at the end
+      sep = "") # no space between elements
+  }
+
+```
+
+
+The function `etasq()` of the `{heplots}` package can calculate different effect sizes for the MANOVA. In order to obtain a MANOVA table with effect sizes, the function `Anova()` from the `{car}` package can be used.
+```{r eta-sq}
+# Print multivariate effect sizes based on Wilks' Lambda
+etasq(Anova(manova_mod), # uses Anova() from {car}
+      test = "Wilks", # default: Pillai; also possible: Hotelling_Lawley
+      anova = TRUE) # default: FALSE
+
+```
+
+
+As described in the theory section, it is possible, though not advisable, to conduct multiple univariate ANOVAS. 
+```{r anovas}
+# Multiple univariate ANOVAs
+summary.aov(manova_mod)
+```
+
+# Discriminant Function Analysis
+
+The `candisc()` function of the `{candisc}` package can be used to perform a discriminant function analysis (also called canonical discriminant analysis). It is also possible to use the `lda()` function of the `{MASS}` package, though it offers not all required statistics by default. 
+
+```{r discriminant function}
+library(candisc)
+mlm_mod <- lm(cbind(ACT, SATV, SATQ) ~ education, data = sat_data) # = MANOVA
+cda <- candisc(mlm_mod) # perform (canonical) discriminant analysis
+cda
+```
+The first part of the output shows the canonical discriminant function analysis. Here, three discriminant functions (rows) were calculated and several statistics are provided:
+
+- `CanRsq`
+    + squared canonical correlation
+    + correlation between the grouping variable and the respective discriminant function
+    + represents the proportion of variance in the discriminant function that the grouping variable can explain
+    + here, the grouping variable can explain `r round(cda$canrsq[1] *100, 2)`% of the first discriminant function's variance
+- `Eigenvalue`
+- `Difference`
+- `Percent`
+    + represents the amount of variance of the outcome variables in percent that the respective discriminant function can explain
+    + here, the first discriminant function can explain `r round(cda$pct[1], 2)`% of the outcome variables
+
+```{r hidden LR, include=FALSE}
+# It is not possible to extract the LR test values from the cda object
+# since they are apparently calculated when printed.
+# Therefore, output is captured and stored
+cda_print_raw <- capture.output(cda) # every printed line = vector element
+cda_print <- cda_print_raw[str_which(cda_print_raw, "LR test"):
+                         (str_which(cda_print_raw, "Signif.")-2)] %>% 
+  str_replace_all("\\s+", " ") %>% # reduce whitespace to one space
+  str_split_fixed("(?<=\\w)\\s", 6) # split into matrix
+cda_print
+```
+
+The second part of the output provides statistical tests that establish whether the calculated discriminant functions can significantly discriminate the groups. As described this is performed with a likelihood ratio stepdown test.
+
+In the example, all three discriminant functions can significantly discriminate the groups, $\Lambda$ = `r cda_print[2, 2]`, $F$(`r cda_print[2, 4]`, `r cda_print[2, 5]`) = `r cda_print[2,3]`, $p$ = `r cda_print[2, 6]`. The combination of the second and the third discriminant variable is not significant, $\Lambda$ = `r cda_print[3, 2]`, $F$(`r cda_print[3, 4]`, `r cda_print[3, 5]`) = `r cda_print[3,3]`, $p$ = `r cda_print[3, 6]`. Consequently, the third discriminant function alone can also not significantly discriminate the groups. Therefore, the first discriminate function is sufficient for the discrimination of the groups. 
+
+
+The following summary output gives additional statistics. 
+```{r discriminant coefficients}
+summary(cda, coef = c("std","structure")) # default: "std" = standardized
+```
+The first part of the summary output is the same as for the printed output. The second part provides the class means, that is the group means on the discriminant functions. These are also called group centroids. 
+
+The third and fourth part of the output contains the standardized coefficients/weights and structure coefficients. A standardized weight represents the standardized contribution of an outcome variable to the discriminant function. A structure coefficient is the correlation of an outcome variable with a discriminant function. Structure coefficients provide insight what the discriminant functions represent.  
+In the example, `ACT` has the highest contribution to the first discriminant function with $w_{1~ACT} = $ `r cda$coeffs.std[1,1]`, meaning an increase in `ACT` of one standard deviation results in an increase of `r cda$coeffs.std[1,1]` in the discriminant function.  
+The structure coefficients represent this information in a different way. Here, the first discriminant function correlates highly with `ACT`, ($r =$ `r cda$structure[1,1]`). The second discriminant function correlates highly with both `SATV` and `SATQ` and thus represents them. 
+
+
+A visualization can be obtained by the `plot` method for a `candisc` object.
+```{r discriminant 1d plot}
+plot(cda, which = 1)
+```
+Using the argument `which = 1`, the `plot()` function produces a plot for the first discriminant function in which a boxplot for each group on the discriminant function is provided. In addition, a plot visualizing the the magnitude of the structure coefficients for the first discriminant function is shown. 
+
+The `which` argument can also take two integers that represent the discriminant function:
+```{r discriminant 2d plot}
+plot(cda, 
+     which = 1:2, # default; plotted discriminant functions
+     ellipse = TRUE,
+     ellipse.prob = 0.75 # default: 0.68; coverage probability
+     )
+```
+
+Using the argument `which = 1:2` produces a two dimensional plot of the first and second discriminant function. The points represent the individual scores on both discriminant functions. The ellipses encompass the points given a certain probability (here, 0.75) where the centers represent the group centroids (means) on the discriminant functions. The depicted vectors represent the structure coefficients of the labeled outcome variable. Note that the strucutre coefficient is represented by the angle between the vector and the discriminant function axis and not by the length. 
+
+However, it is not possible to discard the points and show only the means. Therefore, the `ggplot()` function of the `{ggplot2}` package is used to create a plot 'by hand':
+```{r ggplot discriminate function}
+discrimi_means <-   cda$scores %>% 
+  select(-Can3) %>% 
+  group_by(education) %>% 
+  summarise(across(c(Can1, Can2), mean))
+
+dis
+ggplot(cda$scores, aes(x = Can1, y = Can2, color = education, shape = education)) +
+  geom_hline(yintercept = 0, color = "grey") +
+  geom_vline(xintercept = 0, color = "grey") +
+  geom_point(alpha = 0.25) +
+  geom_point(data = discrimi_means, size = 5) +
+  theme_bw() +
+  theme(panel.grid  = element_blank()) 
+```
+The information is the same (though the vectors are missing) as in the default plot using the `plot()` function but the group centroids are better visible. As can be seen, the first discriminant function (x-axis), discriminates between the first 3 groups and group 4 and 5; group 3 lies in the middle. 
+
+
+# Combined Report
+
+The report of the discriminant analysis can look like this:
+
+> After establishing significance of the MANOVA, the MANOVA was followed up with a discriminant analysis. The discriminant analysis resulted in three discriminant functions. The first discriminant function explained `r round(cda$pct[1], 2)`% of the variance in the outcome variables, the second explained `r round(cda$pct[2], 2)`% and the third explained `r round(cda$pct[3], 2)`%. Only the first discriminant function could significantly differentiate the groups. All three discriminant functions together could significantly discriminate the groups  $\Lambda$ = `r cda_print[2, 2]`, $F$(`r cda_print[2, 4]`, `r cda_print[2, 5]`) = `r cda_print[2,3]`, $p$ = `r cda_print[2, 6]`. The combination of the second and the third discriminant variable was not significant, $\Lambda$ = `r cda_print[3, 2]`, $F$(`r cda_print[3, 4]`, `r cda_print[3, 5]`) = `r cda_print[3,3]`, $p$ = `r cda_print[3, 6]`. Consequently, the third discriminant function alone can also not significantly discriminate the groups. However, the groups could only explain `r round(cda$canrsq[1] *100,2)`% of the first discriminant function's variance, canonical R squared of $CR^2$ = `r round(cda$canrsq[1], 2)`.
+
+
+
+
+
+
+
+# Theory and Mathematics of MANOVA
+In order to understand the MANOVA better, here, the crucial equations are presented. 
+
+## Decomposition of measured scores
+Like in the ANOVA, the measured scores on all outcome variables can be decomposed into a between part (between groups = model) and an within part (within groups = residuum).
+
+The folllowing notation will be used:  
 SSCP = sum of squares and cross product matrix
 
 $\mathbf{T}$ = Total SSCP  
@@ -39,7 +393,7 @@ $\mathbf{W}$ = Within SSCP
 Indices:  
 $m$ = Index of person, $m = 1,..., N$, where $N$ is the number of persons  
 $i$ = Index of outcome variable, $i = 1,..., p$, where $p$ is the number of outcome variables  
-$j$ = Index of group, $j = 1,..., k$, where $k$ is the number of groups  
+$j$ = Index of group, $j = 1,..., q$, where $q$ is the number of groups  
 
 Therefore, $x_{mij}$ denotes the value from person $m$ on outcome variable $i$ in group $j$. 
 
@@ -64,117 +418,89 @@ $$ \begin{pmatrix}
   \end{pmatrix}$$
 
 
-
 Calculation of the elements of the total SSCP:  
-$\displaystyle SS_{T~i,i} = \sum_{j = 1}^{J}\sum_{m=1}^{n_j} \left( x_{mij} - \overline{x}_{i} \right)^2$  
-$\displaystyle CP_{T~h,i} = \sum_{j=1}^J\sum_{m=1}^{n_j} \left(x_{mhj} - \overline{x}_h\right) \cdot \left(x_{mij} - \overline{x}_i \right)$,    where $h \in [1,p] \land h \neq i$ 
+$\displaystyle SS_{T~i,i} = \sum_{j = 1}^{q}\sum_{m=1}^{n_j} \left( x_{mij} - \overline{x}_{i} \right)^2$  
+$\displaystyle CP_{T~h,i} = \sum_{j=1}^q\sum_{m=1}^{n_j} \left(x_{mhj} - \overline{x}_h\right) \cdot \left(x_{mij} - \overline{x}_i \right)$,    where $h \in [1,p] \land h \neq i$ 
 
 The $SS_{T~i,i}$ denotes the total sum of squares. It is a unstandardized measure for the interindividual variability on one outcome variable irrespective of the groups.  
 The $CP_{T~h,i}$ denotes the total sum of cross products. It is a unstandardized measure capturing the relationship between two outcome variables irrespective of the groups. 
 
 Calculation of the elements of the between SSCP:
-$\displaystyle SS_{B~i,i} = \sum_{j = 1}^{J}{n_j~\cdot~\left(\overline{x}_{ij}  - \overline{x}_i\right)^2}$  
-$\displaystyle CP_{B~h,i} = \sum_{j=1}^J n_j \cdot \left(x_{hj} - \overline{x}_h\right) \cdot \left(x_{ij} - \overline{x}_i \right)$,    where $h \in [1,p] \land h \neq i$ 
+$\displaystyle SS_{B~i,i} = \sum_{j = 1}^{q}{n_j~\cdot~\left(\overline{x}_{ij}  - \overline{x}_i\right)^2}$  
+$\displaystyle CP_{B~h,i} = \sum_{j=1}^q n_j \cdot \left(x_{hj} - \overline{x}_h\right) \cdot \left(x_{ij} - \overline{x}_i \right)$,    where $h \in [1,p] \land h \neq i$ 
 
 The $SS_{B~i,i}$ denotes the between sum of squares. It is a unstandardized measure for the variability of one outcome variable between the groups.  
 The $CP_{B~h,i}$ denotes the between sum of cross products. It is a unstandardized measure capturing the relationship between two outcomes group means deviation from the grand mean.
 
 Calculation of the elements of the within SSCP: 
-$\displaystyle SS_{W~i,i} = \sum_{j = 1}^{J}\sum_{m=1}^{n_j} \left( x_{mij} - \overline{x}_{ij} \right)^2$  
-$\displaystyle CP_{W~h,i} = \sum_{j=1}^J\sum_{m=1}^{n_j} \left(x_{mhj} - \overline{x}_{hj}\right) \cdot \left(x_{mij} - \overline{x}_{ij} \right)$,    where $h \in [1,p] \land h \neq i$ 
+$\displaystyle SS_{W~i,i} = \sum_{j = 1}^{q}\sum_{m=1}^{n_j} \left( x_{mij} - \overline{x}_{ij} \right)^2$  
+$\displaystyle CP_{W~h,i} = \sum_{j=1}^q\sum_{m=1}^{n_j} \left(x_{mhj} - \overline{x}_{hj}\right) \cdot \left(x_{mij} - \overline{x}_{ij} \right)$,    where $h \in [1,p] \land h \neq i$ 
 
 The $SS_{W~i,i}$ denotes the within sum of squares. It is a unstandardized measure for the variability of one outcome variable within the groups.  
 The $CP_{B~h,i}$ denotes the with sum of cross products. It is a unstandardized measure capturing the relationship between two outcomes within groups.
 
 
-### Hypotheses and test statistics
+## Discriminant function
+
+The discriminant function is a linear combination of outcome variables that maximizes the differences between groups:  
+$\displaystyle D_1 = \sum_{i = 1}^{p} w_{1i} \cdot X_i$
+
+The outcome variables are used to predict the discriminant function. The discriminant function analysis enables users to construct a function on which the groups differ and is a composite of the outcome variables. The number of discriminant functions $r$ within a MANOVA is $r = min\left(p,  q-1\right)$.
+
+The weights are calculated in the following manner:  
+1. Maximization of the ratio of the between and within sum of squares
+    - the first discriminant function discriminates maximal between groups
+2. The resulting differences between groups are represented by a second, third, ... discriminant function. 
+3. The discriminant functions are orthogonal (uncorrelated)
+
+In addition to the weights, there exist   
+- normed weights and 
+    - the discriminant functions can have different means and variances
+    - to compare the discriminant functions they can be standardized 
+    - they have a mean of zero and a within variance of 1 
+- standardized weights
+    - standardize outcome variables (not discriminant functions)
+    - make it possible to compare different weights despite different metrics
+    
+    
+The correlation of the discriminant function with the outcome variables is called *structural coefficient*
 
 
+## Hypotheses and test statistics
 
-### Discriminant function
+The null hypothesis states that all outcome means are equal within and between groups.  
+$H_0: \mu_{11} = \ldots = \mu_{ij} = \ldots = \mu_{pq}$  
 
+The alternative hypothesis states that at least two means are not equal.  
+$H_1: \neg H_0$ or $H_1: \mu_{ij} \neq \mu_{il}$ for at least one $i$ and a pair $(j,l), j \neq l$
 
-## Load packages and data
-
-```{r packages, results='hide', message=FALSE}
-library(biotools) # Box-M test
-library(skimr)
-library(tidyverse)
-```
-
-```{r data}
-# Import data from psych package on ability measures
-sat_data <- psych::sat.act %>% 
-  as_tibble() %>% 
-  mutate(gender = factor(gender, labels = c("male", "female")),
-         education = factor(education))
-  
-glimpse(sat_data)
-```
-| Variable  | Meaning                                                        |
-|-----------|----------------------------------------------------------------|
-| gender    | males = 1, females = 2                                         |
-| education | self reported education 1 = high school... 5 = graduate work   |
-| age       | in years                                                       |
-| ACT       | ACT composite scores may range from 1 -- 36; Norms: mean of 20 |
-| SATV      | SAT verbal scores may range from 200 -- 800                    |
-| SATQ      | SAT quantitative scores may range from 200 -- 800              |
+There are 4 test statistics:  
+1. Pillai's trace (Bartlett-Pillai-criterion; $V$)
+    - sum of the proportion of explained variance on the discriminant functions
+    - the greater the effect, the greater $V$
+2. Wilks' $\Lambda$
+    - product of unexplained variance on each of the discriminant functions
+    - represents the proportion of error variance to total variance
+    - the greater the effect, the smaller Wilks' $\Lambda$
+3. Hotelling's trace (Hotelling-Lawley-criterion; $U$)
+    - sum of the eigenvalues for each discriminant function
+    - represents the proportion of explained variance to unexplained variance of all discriminant functions
+    - the greater the effect, the greater $U$
+4. Roy's largest root ($\Theta$)
+    - eigenvalue for the first discriminant function
+    - represents the proportion of explained variance to unexplained variance of the first discriminant function
+    - represents the maximal between group difference due to the suczessive-maximization property of building discriminant functions
+    - the greater the effect (on the first discriminant function), the greater $\Theta$
 
 
- The following model will be analyzed: `ACT`, `SATV` and `SATQ` are the outcome variables and `education` is the grouping variable.
+## Effect size
+
+$\hat{\eta}^2_{mult-\Lambda} = 1 - \Lambda$
+
+The partial $\hat{\eta}^2_{mult-\Lambda}$ is calculated in the following manner:
+$\hat{\eta}^2_{p~mult-\Lambda} = 1 - \Lambda^{1/r}$, where $r$ is the maximum number of discriminant functions (see discriminant function section above).
 
 
-# Assumptions of MANOVA
-1. Independent residuals
-    - within and between groups
-2. Multivariate normality of the residuals
-    - can be tested with Merida's test of multivariate normality
-3. Homogeneity of the residual covariance matrices
-    - this includes homoskedasticity (homogeneity of variance = equal residual variances) and homogeneity of the residual covariances between the groups
-    - can be tested with the Box-M Test
-
-## Testing the Assumptions
-
-### 1. Independent residuals
-### 2. Multivariate normality of the residuals
-### 3. Homogeneity of the residual covariance matrix
-
-```{r box-m-test}
-#boxM(sat_data[, c("ACT", "SATV", "SATQ")], factor(sat_data$gender)) # does not work
-```
-
-
-# MANOVA
-
-```{r}
-manova_mod <- manova(cbind(ACT, SATV, SATQ) ~ education, data = sat_data)
-sapply(c(1,2,3), function(x) sum(1,x))
-
-
-sapply(c("Pillai", "Wilks", "Hotelling-Lawley", "Roy"), function(x) summary(manova_mod, test = x))
-
-walk(c("Pillai", "Wilks", "Hotelling-Lawley", "Roy"), ~summary(manova_mod, test = .x))
-
-tests <- c("Pillai", "Wilks", "Hotelling-Lawley", "Roy")
-for (name in 1:length(tests)) {
-  print(name)
-  print(summary(manova_mod, test = tests[[name]]))
-}
-
-summary(manova_mod, test = "Pillai")
-
-```
-
-# Discriminant Function Analysis
-
-
-# Combined Report
-
-
-
-
-
-
-
+Wilks' $\Lambda$ explains the amount of not explained variance
 
 
