@@ -23,8 +23,6 @@ It is of interest that the null hypothesis can be safely rejected which means th
 A priori (also planned comparison) vs. a posteriori (also post-hoc)
 
 
-
-
 Terminology:
 
 - alpha
@@ -46,7 +44,11 @@ Terminology:
 
 family-wise error rate ($FWER$; also called experiment-wise error rate) is the probability of making at least one $\alpha$-error (type I error) in a set of statistical tests:
 $$ FWER = \alpha_{fam} = 1 - (1-\alpha_r)^m$$
-Here, $\alpha_r$ is the the $\alpha$-level for a specific test $r$ and $m$ denotes the number of all tests (see appendix for derivation).
+Here, $\alpha_r$ is the the $\alpha$-level for a specific test $r$ and $s$ denotes the number of all tests (see appendix for derivation).
+
+When there are $g$ means, there are:
+$$s = \frac{g \cdot (g-1)}{2}$$
+
 
 ```{r packages, message=FALSE}
 library(tidyverse)
@@ -97,10 +99,33 @@ For $m = 20$ tests, the probability to have at least one false-significant resul
     + Resampling Methods
 
     
-    
-# $p$-Value Adjustment
+# Individual $t$-tests
 
-## Bonferronig correction
+is a special case of linear contrast (link to linear contrast; look where to place this maybe)
+
+
+Form of a priori comparisons 
+usually considered a terrible approach, however under special circumstances this might be okay (small number of comparisons that are really preplanned)
+no real adjustment is made 
+
+If homogeneity of variances is given and sample sizes are the same:
+Replace variances in formula with mean squared error (MSE)
+
+$$t = \frac{\bar{Y}_i - \bar{Y}_j}{\sqrt{\frac{MS_{Error}}{n} + \frac{MS_{Error}}{n}}} = \frac{\bar{Y}_i - \bar{Y}_j}{\sqrt{\frac{2\cdot MS_{Error}}{n}}}$$
+Evaluate $t$ with $df_{Error}$
+
+
+If variances are heterogeneous and sample sizes are equal:
+- use individual group variances and evaluate $t$ on $df = 2(n-1)$
+
+
+If variances are heterogeneous and sample sizes are unequal:
+- use individual variances and correct degrees of freedom using Welch-Satterwaite approach (link to t-test)
+
+    
+# Adjustment of $\alpha$
+
+## Bonferroni adjustment
 
 - divide the $\alpha$-level by the $m$ tests to get the new $\alpha$ level for all $r$ tests
 
@@ -110,16 +135,97 @@ Disadvantages:
 - very conservative
     + for many tests 
 
-## Adjustment of critical values in mean comparisons 
+
+$$\alpha_r = \frac{\alpha_{fam}}{s}$$
+
+
+$r$ = specific test 
+
+$s$ = total number of comparisons
+
+
+
+## Bonferroni-Holm adjustment
+
+Steps in the Bonferroni-Holm adjustment
+1. Rank comparisons from most significant to least significant
+2. For each comparison get $\alpha_r$
+
+$$\alpha_r = \frac{\alpha_{fam}}{s - (r-1)}$$
+$r$ = specific test, $s$ = total number of comparisons
+
+
+
+
+## Šidák adjustment
+
+- less conservative than Bonferroni
+
+
+$$\alpha_r = \sqrt[s]{1- \alpha_{fam}}$$
+
+$r$ = specific test 
+
+$s$ = total number of comparisons
+
+# Adjustment of critical values in mean comparisons 
 - only relevant for mean comparisons (ANOVA)
 
 - maybe decide to include it elsewhere (Comparing Means)
     + at least make a link
     
     
-Tukey HSD and Tukey-Kramer
+see also Kirk 2012    
+    
+    
+classification:
+- studentized range based test (e.g., Tukey but also a lot of others)
+    
+    
+## Tukey HSD and Tukey-Kramer
   - TukeyHSD only for equal sample sizes
   - Tukey Kramer for unequal sample sizes
+
+comparison of all means
+
+use of studentized range distribution (link to distributions): $q$ statistic
+
+
+Standard error in original Tukey's HSD for equal sample sizes
+$$se_{\bar{Y}_j - \bar{Y}_{j'}} = \sqrt{\frac{MS_{Residual}}{n}}$$
+where $n$ is the group size and $n_j = n_{j'}$
+
+
+Standard error in Tukey-Kramer HSD for unequal sample sizes
+
+
+There are two possibilities to format the 
+
+
+Often, the standard error for the Tukey-Kramer test is stated like this:
+$$se_{q} = \sqrt{\frac{MS_{Residual}}{2} \left(\frac{1}{n_j} + \frac{1}{n_{j'}} \right)}$$
+which is the standard error of the q statistic
+
+The associated critical value is a studentized range statistic $q$. This is dependent on the number of means (groups) and $df_{Residual}$
+
+```{r}
+# get critical studentized range q
+qtukey(1-0.05, nmeans = 5, df = 10) # abitrary values
+```
+
+
+
+However, it is better to rewrite the standard error and extract $\sqrt{\frac{1}{2}}$, which will result in the standard error in means
+$$se_{\bar{Y}_j - \bar{Y}_{j'}} = \sqrt{MS_{Residual} \left(\frac{1}{n_j} + \frac{1}{n_{j'}} \right)}$$
+This leads to a the following different critical value:
+$$t_{df_{Error}}^* = \frac{q_{g;df_{Error}}}{\sqrt{2}}$$
+
+
+With both, versions of standard errors and corresponding critical values, the following can be done:
+$$95\%~CI = (\bar{Y}_j - \bar{Y}_j') \pm cv\cdot se$$
+cv = critical value
+
+
 
 ```{r}
 
@@ -141,6 +247,47 @@ summary(glht(aov_mod, linfct = mcp(dose = "Tukey"), alternative = "greater"))
 
 ```
 
+
+## Games and Howell Procedure
+
+is Tukey HSD for unequal sample sizes and unequal variances!
+
+## Dunnett Test
+
+
+
+# Benjamini-Hochberg Test
+
+focuses on false-discovery rate and not familywise error rate.
+
+Steps
+1. Rank the $s$ unadjusted $p$ values in ascending order (from most to least significant) with the rank $i$
+2. Calculate new $\alpha_r = \left(\frac{i}{s} \right) \cdot \alpha_{fam}$ for every single comparison $r$
+3. Determine whether the original/unadjusted $p$ value is smaller than the new $\alpha_r$, then it is significant
+
+1. Rank comparisons from most significant to least significant
+2. Calculate new $\alpha_r = \frac{i}{s}\cdot \alpha_{fam}$
+   - $i$ = rank
+   - $s$ = number of comparisons ($s =\frac{j*(j-1)}{2}$)
+3. Determine whether the original $p$ is smaller than $\alpha_r$, then it is significant
+
+
+Include a table to clarify this
+
+
+
+```{r}
+pairwise.t.test(data_indep1$weight, data_indep1$group, 
+                p.adjust.method = "BH") # BH = Benjamini-Hochberg
+```
+
+in order to get adjuster $p$ values:
+
+$p < \left(\frac{i}{m}\right) \cdot \alpha_{fam}$
+
+to 
+
+$p \cdot \left(\frac{m}{i}\right) <  \alpha_{fam}$
 
 
 
