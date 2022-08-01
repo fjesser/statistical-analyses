@@ -386,6 +386,12 @@ when no interaction lines are parallel
     
 add a bunch of line graphs
 
+### Assumptions of Two-Way ANOVA ###
+
+1. Dependent Variable is metric
+2. Homogeneity of variances
+3. Independent and normal distributed residuals
+
 
 #### Two-Way ANOVA by hand
 
@@ -467,7 +473,7 @@ Model Sum of Squares
 $$SS_{Model} = SS_A + SS_B + SS_{A\times B}$$
 
 
-## Non-Orthogonal Factorial ANOVA: Unbalanced Designs
+### Non-Orthogonal Factorial ANOVA: Unbalanced Designs ###
 
 control everything that is written here!
 
@@ -570,7 +576,7 @@ Anova(aov_type1, type = "III")
 
 
 
-
+	
 # Comparing several dependent samples
 
 ## One-way ANOVA for dependent samples
