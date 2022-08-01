@@ -11,6 +11,174 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
+Correlation between more than two variables
+
+Reasons for usage
+- Reveal redundant relationships
+  - How much variance in $Y$ is explained by $X_1$ independent from $X_2$?
+- Reveal spurious correlations
+  - Can the relationship between two variables be expressed by a third variable?
+- Reveal masked relationships
+  - Is a relationship between two variables is masked (covered up) by a third variable
+
+
+Usually shown for product-moment correlation but also possible for other variable types: Add this!
+- categorical variables: log-linear analysis
+- ordinal variables: similar to shown below possible with Kendall's $\tau$
+
+
+
+Usage
+- partial correlation
+- semi-partial correlation
+
+
+
 ## Partial Correlation
 
+- is a bivariate correlation between two residual variables
+
+
+
+zero order correlation
+- bivariate correlation (between two variables)
+- no additional variable is partialized out
+
+
+first order (partial) correlation
+- bivariate correlation in which a third variable was partialized oout
+
+
+Concept
+- partial correlation is the correlation of residual variables
+- $r_{YX\bullet Z} = r_{E_{X|Z}E_{Y|Z}}$
+- variable that was partialized out comes after the bullet
+
+
+
+conditional correlation
+- partial correlation can be interpreted as an average conditional correlation: $r_{XY|Z=z}$
+- averaged over the distribution of variable $Z$
+- averaged by reference to the conditonal variances and covariances
+
+
+
+
+
+
+$$r_{YX \bullet Z} = \frac{r_{YX} - r_{YZ}\cdot r_{XZ}}{\sqrt{\left(1-r_{YZ}^2\right) \left(1-r_{XZ}^2\right)}}$$
+
+
+- $r_{YX\bullet Z}$ = partial correlation of 
+- $r_{YX}$ = zero order correlation of $X$ and $Y$
+- $r_{YZ}$ = zero order correlation of $Z$ and $Y$
+- $r_{XZ}$ = zero order correlation of $Z$ and $X$
+
+
+Add path diagram illustrating partial correlation
+
+
+
+
+Properties of the partial correlation
+
+- value falls between -1 and +1 (equivalent to the bivariate correlation)
+
+
+Interpretation
+
+1) $r_{XY} = r_{XY\bullet Z}$
+  - zero-order correlation is equal to the first-order partial correlation
+  - if $Z$ is uncorrelated with $X$ and $Y$
+2) $|r_{XY}| < |r_{XY\bullet Z}|$
+  - absolute value of the zero-order correlation is smaler than the absolute value of the first-order partial correlation
+  - $Z$ variable can explain (part of) the relationship (phrase this better)
+  - special case: $r_{XY\bullet Z} = 0$
+    - product of correlation of variables $X$ and $Y$ with variable $Z$ ($r_{YZ}\cdot r_{XZ}$) is equal to the zero-order correlation ($r_{YX}$; see formula above)
+3) $|r_{XY}| > |r_{XY\bullet Z}|$
+  - if $Z$ is uncorrelated with either $X$ or $Y$ but not both
+
+
+
+Add examples with numbers
+- for each example provide a zero-order correlation matrix 
+- than provide partial correlations
+
+
+
+
+
+#### Suppressor Variable ####
+
+- must be restructred so it aligns with the enumeration above
+
+3) $|r_{XY}| > |r_{XY\bullet Z}|$
+  - if $Z$ is uncorrelated with either $X$ or $Y$ but not both
+
+
+possible that partial correlation has opposite sign than zero-order correlation
+
+
+Add sick tikz venn diagrams
+- unfortunately, it seems that it is not possible with R because shading areas with lines seems to be difficult
+- Add multiple venn diagrams in one figure representing different concepts
+- zero-order correlations between X and Y as well as Z and Y
+- squared partial correlation: $r_{XY\bullet Z}^2$
+- squared semi-partial correlation $r_{X
+- Explanation venn diagram
+  - each circle represents the variance of a variable
+  - overlap represents the shared variance between two variables: shared variance = squared correlation
+
+```{r}
+library(VennDiagram)
+grid.newpage() # create new plotting page
+draw.triple.venn(
+    area1 = 10, area2 = 10, area3 = 10,
+    n12 = 2, n13 = 2, n23 = 2, n123 = 2,
+    category = c("X", "Y", "Z"),
+    fill = c("blue", "red", NA),
+)
+
+```
+
+
+
+
+### Squared Partial Correlations ###
+
+- square of a partial correlation is a proportional reduction in error
+- represents the proportion of the variation in $Y$ that is explained by $X$, out of that left unexplained by $Z$ (Change this definition)
+
+
+$$r_{YX\bullet Z}^2 = \frac{R_{Y|X,Z}^2 - r_{YZ}^2}{1-r_{YZ}^2}$$
+
+- $R_{Y|X,Z}^2$ = determination coefficient for a multiple regression in which $Y$ is regressed on $X$ and $Z$
+- $r_{YZ}^2$ = squared zero order correlation between $Z$ and $Y$
+- $R_{Y|X,Z}^2 - r_{YZ}^2$ = partial proportion of variance in $Y$ uniquely explained by $X$
+- $1- r_{YZ}$ = proportion of variance in $Y$ unexplained by $Z$
+
+
+### Higher-Order Partial Correlations ###
+
+second-order partial correlation
+
+### Assumptions for Partial Correlations ###
+
+
+
+
+
+### With R
+
+
+Testing whether zero-order correlation differs significantly from partial correlation
+
+
 ## Semi-Partial Correlation
+
+- third variable is only partialized out of one variable
+
+correlation of variable X with residual variable Y for which variable Z was partialized out
+
+
+$$r_{(Y\bullet Z)X} = \frac{r_{XY} - r_{XZ} \cdot r_{YZ}}{\sqrt{1-r_{YZ}^2}}$$
