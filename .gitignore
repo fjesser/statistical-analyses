@@ -1,15 +1,11 @@
-# Don't track RStudio files
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
+# Gitignore of the Statistical Analyses Project
 
-# Don't track html files
-*.html
+################################################################################
+# Files
+################################################################################
 
-# Don't track introductory files
-*/0_Introduction.Rmd
-
+# Do not track backup files
+*~
 # Don't track backup .bib-files
 bibliography.bib.sav
 bibliography.bib.bak
