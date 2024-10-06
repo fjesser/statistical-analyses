@@ -1,0 +1,6 @@
+#+TITLE: Statistical Analyses
+#+EXPORT_FILE_NAME: index
+
+#+INCLUDE: "theindex.inc"
+
+Welcome to Statistical Analyses!
